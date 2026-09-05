@@ -117,12 +117,12 @@ export function BursarDebtorsView() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
           <Button
             variant="outline"
             size="md"
             onClick={handleDownloadExcel}
-            className="gap-2 text-xs"
+            className="w-full sm:w-auto gap-2 text-xs"
           >
             <Download className="w-4 h-4" /> Download Excel List
           </Button>
@@ -132,7 +132,7 @@ export function BursarDebtorsView() {
             size="md"
             disabled={selectedStudentIds.length === 0}
             onClick={() => setIsReminderModalOpen(true)}
-            className="gap-2 text-xs shadow-xs"
+            className="w-full sm:w-auto gap-2 text-xs shadow-xs"
           >
             <Mail className="w-4 h-4" /> Send Bulk Reminders ({selectedStudentIds.length})
           </Button>

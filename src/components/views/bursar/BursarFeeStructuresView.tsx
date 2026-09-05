@@ -233,7 +233,7 @@ export function BursarFeeStructuresView() {
             setTermId(activeTerm?.id || "");
             setIsCreateOpen(true);
           }}
-          className="gap-2 shadow-xs"
+          className="w-full sm:w-auto gap-2 shadow-xs"
         >
           <Plus className="w-4 h-4" /> Create Fee Structure
         </Button>

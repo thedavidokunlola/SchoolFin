@@ -136,9 +136,9 @@ export function ProprietorTermsView() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
             Academic Term Management
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -149,7 +149,7 @@ export function ProprietorTermsView() {
           variant="accent"
           size="sm"
           onClick={() => setIsCreateModalOpen(true)}
-          className="gap-2 shadow-xs"
+          className="w-full sm:w-auto gap-2 shadow-xs"
         >
           <Plus className="w-4 h-4" /> Create Term
         </Button>

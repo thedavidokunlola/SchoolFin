@@ -51,14 +51,14 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
         </div>
 
         {/* Quick Action Buttons */}
-        <div className="flex items-center gap-3">
-          <Link href="/bursar/cash/record" onClick={(e) => handleNav("cash", e)}>
-            <Button variant="accent" size="sm" className="gap-2 shadow-xs">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+          <Link href="/bursar/cash/record" onClick={(e) => handleNav("cash", e)} className="w-full sm:w-auto">
+            <Button variant="accent" size="sm" className="w-full sm:w-auto gap-2 shadow-xs">
               <Receipt className="w-4 h-4" /> Record Cash Payment
             </Button>
           </Link>
-          <Link href="/bursar/fees/post" onClick={(e) => handleNav("post", e)}>
-            <Button variant="primary" size="sm" className="gap-2">
+          <Link href="/bursar/fees/post" onClick={(e) => handleNav("post", e)} className="w-full sm:w-auto">
+            <Button variant="primary" size="sm" className="w-full sm:w-auto gap-2">
               <CreditCard className="w-4 h-4" /> Post Fees
             </Button>
           </Link>

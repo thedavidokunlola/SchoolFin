@@ -58,12 +58,12 @@ export function BursarReportsView() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
           <Button
             variant="outline"
             size="md"
             onClick={handleDownloadDebtorList}
-            className="gap-2 text-xs"
+            className="w-full sm:w-auto gap-2 text-xs"
           >
             <Download className="w-4 h-4" /> Debtor List Excel
           </Button>
@@ -71,7 +71,7 @@ export function BursarReportsView() {
             variant="accent"
             size="md"
             onClick={handleDownloadTaxAudit}
-            className="gap-2 text-xs shadow-xs"
+            className="w-full sm:w-auto gap-2 text-xs shadow-xs"
           >
             <FileSpreadsheet className="w-4 h-4" /> Tax Audit Excel Export
           </Button>

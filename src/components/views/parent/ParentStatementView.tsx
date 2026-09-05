@@ -109,7 +109,7 @@ export function ParentStatementView({
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <Link
           href="/parent/dashboard"
           onClick={handleBack}
@@ -119,17 +119,22 @@ export function ParentStatementView({
         </Link>
 
         {outstandingBalanceNumber > 0 && (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <Link
               href={`/parent/installments/${studentId}`}
               onClick={handleInstallments}
+              className="flex-1 sm:flex-initial"
             >
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+              <Button variant="outline" size="sm" className="w-full sm:w-auto gap-1.5 text-xs">
                 <Calendar className="w-3.5 h-3.5" /> Installment Plan
               </Button>
             </Link>
-            <Link href={`/parent/pay/${studentId}`} onClick={handlePay}>
-              <Button variant="accent" size="sm" className="gap-1.5 text-xs shadow-xs">
+            <Link
+              href={`/parent/pay/${studentId}`}
+              onClick={handlePay}
+              className="flex-1 sm:flex-initial"
+            >
+              <Button variant="accent" size="sm" className="w-full sm:w-auto gap-1.5 text-xs shadow-xs">
                 <CreditCard className="w-3.5 h-3.5" /> Pay Online Now
               </Button>
             </Link>

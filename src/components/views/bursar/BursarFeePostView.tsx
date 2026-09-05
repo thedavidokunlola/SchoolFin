@@ -146,14 +146,15 @@ export function BursarFeePostView({ onNavigate }: BursarFeePostViewProps) {
       </div>
 
       {/* Tab switcher */}
-      <div className="flex bg-slate-200/70 p-1 rounded-xl w-fit">
+      <div className="flex flex-col sm:flex-row bg-slate-200/70 p-1 rounded-xl w-full sm:w-fit gap-1 sm:gap-0">
         <button
+          type="button"
           onClick={() => {
             setMode("bulk");
             setFormError(null);
             setSuccessMessage(null);
           }}
-          className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
+          className={`flex items-center justify-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
             mode === "bulk"
               ? "bg-white text-slate-900 shadow-xs"
               : "text-slate-600 hover:text-slate-900"
@@ -162,12 +163,13 @@ export function BursarFeePostView({ onNavigate }: BursarFeePostViewProps) {
           <Users className="w-3.5 h-3.5" /> Bulk Post by Class
         </button>
         <button
+          type="button"
           onClick={() => {
             setMode("individual");
             setFormError(null);
             setSuccessMessage(null);
           }}
-          className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
+          className={`flex items-center justify-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
             mode === "individual"
               ? "bg-white text-slate-900 shadow-xs"
               : "text-slate-600 hover:text-slate-900"
