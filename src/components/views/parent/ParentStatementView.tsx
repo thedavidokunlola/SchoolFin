@@ -1,15 +1,13 @@
 "use client";
 
-// src/components/views/parent/ParentStatementView.tsx
-// Parent portal child financial statement and online payment actions (Module B2, E1, F2)
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { trpc } from "@/lib/trpc/client";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { ArrowLeft, CreditCard, Calendar } from "lucide-react";
+import { ArrowLeft, CreditCard, Calendar, CheckCircle2, RefreshCw, X } from "lucide-react";
 
 export interface ParentStatementViewProps {
   studentId: string;
@@ -24,9 +22,49 @@ export function ParentStatementView({
   onPay,
   onInstallments,
 }: ParentStatementViewProps) {
-  const { data: student, isLoading } = trpc.students.getById.useQuery({
+  const searchParams = useSearchParams();
+  const utils = trpc.useUtils();
+  const [paymentSuccessMsg, setPaymentSuccessMsg] = useState<string | null>(null);
+
+  const txRef = searchParams.get("tx_ref") || searchParams.get("txRef") || "";
+  const transactionId = searchParams.get("transaction_id") || searchParams.get("transactionId") || "";
+  const statusParam = searchParams.get("status");
+
+  const { data: student, isLoading, refetch } = trpc.students.getById.useQuery({
     id: studentId,
   });
+
+  // Verify payment if redirected from Flutterwave with tx_ref or status
+  const verifyQuery = trpc.payments.verify.useQuery(
+    {
+      txRef,
+      transactionId: transactionId || undefined,
+    },
+    {
+      enabled: Boolean(txRef && (statusParam === "successful" || statusParam === "complete" || statusParam === "completed")),
+      refetchInterval: (data) => (data?.status === "SUCCESS" ? false : 3000),
+    },
+  );
+
+  useEffect(() => {
+    if (verifyQuery.data?.status === "SUCCESS") {
+      utils.students.getById.invalidate({ id: studentId });
+      const receiptNo = verifyQuery.data.receipt?.receiptNumber;
+      setPaymentSuccessMsg(
+        `Payment of ₦${Number(verifyQuery.data.amount).toLocaleString()} confirmed successfully! Receipt #${receiptNo || "Generated"} has been issued.`,
+      );
+    }
+  }, [verifyQuery.data, studentId, utils]);
+
+  // Auto-dismiss the payment success notification after 10 seconds
+  useEffect(() => {
+    if (paymentSuccessMsg) {
+      const timer = setTimeout(() => {
+        setPaymentSuccessMsg(null);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [paymentSuccessMsg]);
 
   if (isLoading) {
     return (
@@ -98,6 +136,30 @@ export function ParentStatementView({
           </div>
         )}
       </div>
+
+      {paymentSuccessMsg && (
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center justify-between gap-3 shadow-xs animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <div className="font-semibold">{paymentSuccessMsg}</div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setPaymentSuccessMsg(null)}
+            className="text-emerald-700 hover:text-emerald-950 p-1 rounded-lg hover:bg-emerald-100/50 transition-colors"
+            title="Dismiss notification"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      {verifyQuery.isLoading && (
+        <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-800 text-xs flex items-center gap-3 shadow-xs">
+          <RefreshCw className="w-4 h-4 text-blue-600 animate-spin shrink-0" />
+          <div className="flex-1 font-semibold">Verifying and recording your online payment with Flutterwave...</div>
+        </div>
+      )}
 
       {/* Student Summary Card */}
       <Card className="p-6 shadow-xs">

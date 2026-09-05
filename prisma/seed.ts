@@ -141,9 +141,15 @@ async function main() {
         relationship: "Guardian",
         isActive: true,
       },
+      {
+        parentId: parent.id,
+        studentId: student3.id,
+        relationship: "Father",
+        isActive: true,
+      },
     ],
   });
-  console.log("✅ Linked Parent to Chinedu Okonkwo and Amina Bello");
+  console.log("✅ Linked Parent to Chinedu Okonkwo (Partial Due), Amina Bello (Settled), and Emeka Adeleke (100% Unpaid)");
 
   // 6. Create Fee Structures
   const feeStructureJSS = await prisma.feeStructure.create({

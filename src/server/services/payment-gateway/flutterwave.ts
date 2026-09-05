@@ -91,7 +91,12 @@ export class FlutterwaveAdapter implements PaymentGateway {
    * Verify transaction with Flutterwave API
    */
   async verifyTransaction(transactionId: string | number): Promise<TransactionVerificationResult> {
-    const response = await fetch(`${FLUTTERWAVE_BASE_URL}/transactions/${transactionId}/verify`, {
+    const isRef = typeof transactionId === "string" && !/^\d+$/.test(transactionId);
+    const url = isRef
+      ? `${FLUTTERWAVE_BASE_URL}/transactions/verify_by_reference?tx_ref=${encodeURIComponent(transactionId)}`
+      : `${FLUTTERWAVE_BASE_URL}/transactions/${transactionId}/verify`;
+
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${this.secretKey}`,

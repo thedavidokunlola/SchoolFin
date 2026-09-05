@@ -49,6 +49,17 @@ export function ParentPayView({
     },
   );
 
+  // Auto-redirect to updated statement after 10 seconds of payment confirmation
+  useEffect(() => {
+    if (verifyQuery.data?.status === "SUCCESS") {
+      const timer = setTimeout(() => {
+        if (onPaymentSuccess) onPaymentSuccess();
+        else if (onBack) onBack();
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [verifyQuery.data, onPaymentSuccess, onBack]);
+
   const initiateMutation = trpc.payments.initiateOnlinePayment.useMutation({
     onSuccess: (data) => {
       setActiveTxRef(data.txRef);

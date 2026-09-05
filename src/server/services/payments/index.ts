@@ -9,6 +9,8 @@ import { computeOutstandingBalance } from "@/server/services/balance";
 import { paymentGateway } from "@/server/services/payment-gateway";
 import { schoolConfig } from "@/../../school.config";
 import { config } from "@/lib/config";
+import { writeAuditLog } from "@/lib/audit";
+import { encrypt } from "@/server/services/encryption";
 
 export interface InitiateOnlinePaymentInput {
   studentId: string;
@@ -99,8 +101,8 @@ export async function initiateOnlinePayment(input: InitiateOnlinePaymentInput) {
   };
 }
 
-export async function verifyPaymentStatus(txRef: string) {
-  const payment = await prisma.payment.findUnique({
+export async function verifyPaymentStatus(txRef: string, transactionId?: string | number) {
+  let payment = await prisma.payment.findUnique({
     where: { flutterwaveRef: txRef },
     include: {
       receipt: true,
@@ -110,6 +112,91 @@ export async function verifyPaymentStatus(txRef: string) {
 
   if (!payment) {
     throw new TRPCError({ code: "NOT_FOUND", message: "Payment record not found" });
+  }
+
+  // If already marked SUCCESS, return immediately
+  if (payment.status === "SUCCESS") {
+    return payment;
+  }
+
+  // Verify against Flutterwave API if still PENDING
+  try {
+    const verification = await paymentGateway.verifyTransaction(transactionId || txRef);
+
+    if (verification.status === "success") {
+      const paidAmount = new Decimal(verification.amount);
+
+      await prisma.$transaction(async (tx) => {
+        // 1. Update Payment status
+        await tx.payment.update({
+          where: { id: payment!.id },
+          data: {
+            status: "SUCCESS",
+            amount: paidAmount,
+            paidAt: new Date(),
+          },
+        });
+
+        // 2. Generate sequential receipt number (Rule MONEY-10: RCP-YYYY-NNNNNN)
+        const currentYear = new Date().getFullYear();
+        const count = await tx.receipt.count();
+        const receiptNumber = `RCP-${currentYear}-${String(count + 1).padStart(6, "0")}`;
+
+        await tx.receipt.create({
+          data: {
+            receiptNumber,
+            studentId: payment!.studentId,
+            amount: paidAmount,
+            method: "CARD",
+            paymentId: payment!.id,
+          },
+        });
+
+        // 3. If installment, mark as paid
+        if (payment!.installmentId) {
+          const installmentData: { paidAt: Date; cardToken?: string } = {
+            paidAt: new Date(),
+          };
+          if (verification.cardToken) {
+            installmentData.cardToken = encrypt(verification.cardToken);
+          }
+          await tx.installment.update({
+            where: { id: payment!.installmentId },
+            data: installmentData,
+          });
+        }
+      });
+
+      // Write audit log (Rule AUDIT-1)
+      await writeAuditLog({
+        userId: "system",
+        action: "PAYMENT_SUCCESS",
+        entity: "Payment",
+        entityId: payment.id,
+        metadata: {
+          txRef,
+          amount: verification.amount,
+          studentId: payment.studentId,
+          status: "SUCCESS",
+        },
+      });
+
+      // Refetch updated payment with receipt
+      payment = await prisma.payment.findUnique({
+        where: { id: payment.id },
+        include: {
+          receipt: true,
+          student: true,
+        },
+      });
+    } else if (verification.status === "failed") {
+      await prisma.payment.update({
+        where: { id: payment.id },
+        data: { status: "FAILED" },
+      });
+    }
+  } catch (error) {
+    console.error("Payment verification error:", error);
   }
 
   return payment;

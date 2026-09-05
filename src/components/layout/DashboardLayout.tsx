@@ -25,8 +25,6 @@ import {
   FileSpreadsheet,
   MessageSquare,
   UserX,
-  Globe,
-  Coins,
 } from "lucide-react";
 
 export interface NavItem {
@@ -297,13 +295,13 @@ export function DashboardLayout({ children, activeTab, onTabChange }: DashboardL
           {/* Right: Currency & Timezone Badges with Spacious Padding */}
           <div className="flex items-center gap-2.5">
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-600 shadow-2xs">
-              <Coins className="w-3.5 h-3.5 text-[#2B35AF]" />
+              <CreditCard className="w-3.5 h-3.5 text-[#2B35AF]" />
               <span>Currency:</span>
               <strong className="text-slate-900 font-bold">{schoolConfig.currency}</strong>
             </div>
 
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-600 shadow-2xs">
-              <Globe className="w-3.5 h-3.5 text-[#0284C7]" />
+              <Calendar className="w-3.5 h-3.5 text-[#0284C7]" />
               <span>Timezone:</span>
               <strong className="text-slate-900 font-bold">{schoolConfig.timezone}</strong>
             </div>

@@ -34,8 +34,13 @@ export const paymentsRouter = router({
 
   verify: protectedProcedure
     .use(requireRole("PARENT", "BURSAR", "ACCOUNTANT", "PROPRIETOR"))
-    .input(z.object({ txRef: z.string() }))
+    .input(
+      z.object({
+        txRef: z.string(),
+        transactionId: z.union([z.string(), z.number()]).optional(),
+      }),
+    )
     .query(async ({ input }) => {
-      return verifyPaymentStatus(input.txRef);
+      return verifyPaymentStatus(input.txRef, input.transactionId);
     }),
 });

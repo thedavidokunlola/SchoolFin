@@ -15,9 +15,17 @@ import {
 
 export const termsRouter = router({
   getAll: protectedProcedure
-    .use(requireRole("BURSAR", "ACCOUNTANT", "PROPRIETOR"))
+    .use(requireRole("PARENT", "BURSAR", "ACCOUNTANT", "PROPRIETOR"))
     .query(async () => {
       return await listAcademicTerms();
+    }),
+
+  getActive: protectedProcedure
+    .use(requireRole("PARENT", "BURSAR", "ACCOUNTANT", "PROPRIETOR"))
+    .query(async ({ ctx }) => {
+      return await ctx.prisma.academicTerm.findFirst({
+        where: { isActive: true },
+      });
     }),
 
   create: protectedProcedure

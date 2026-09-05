@@ -19,7 +19,7 @@ import { decrypt } from "@/server/services/encryption";
 
 export const authRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
-    const user = await prisma.user.findUnique({
+    const user = await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
       select: {
         id: true,
