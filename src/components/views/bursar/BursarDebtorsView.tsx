@@ -10,12 +10,14 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
 import { SCHOOL_CLASSES } from "@/lib/constants";
+import { EmptyState } from "@/components/ui/EmptyState";
 import {
   Download,
   Mail,
   Search,
   PauseCircle,
   PlayCircle,
+  ShieldCheck,
 } from "lucide-react";
 
 export function BursarDebtorsView() {
@@ -293,8 +295,13 @@ export function BursarDebtorsView() {
                 </tr>
               ) : debtorsData?.debtors.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="p-8 text-center text-slate-400">
-                    No matching debtors found for the selected criteria.
+                  <td colSpan={8} className="p-4">
+                    <EmptyState
+                      icon={<ShieldCheck className="w-6 h-6 text-emerald-600" />}
+                      title="No Outstanding Debtors"
+                      description="All student accounts are currently settled in full, or fee structures have not yet been posted to student ledgers for this academic term."
+                      compact
+                    />
                   </td>
                 </tr>
               ) : (

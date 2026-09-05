@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
-import { Plus, Edit2, Trash2, AlertTriangle } from "lucide-react";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Plus, Edit2, Trash2, AlertTriangle, Calendar } from "lucide-react";
 
 interface AcademicTermItem {
   id: string;
@@ -161,9 +162,14 @@ export function ProprietorTermsView() {
             Loading terms...
           </div>
         ) : terms?.length === 0 ? (
-          <div className="col-span-3 p-12 text-center text-xs text-slate-400">
-            No academic terms configured yet. Click "Create Term" to get started.
-          </div>
+          <EmptyState
+            icon={<Calendar className="w-6 h-6" />}
+            title="No Academic Terms Configured"
+            description="To begin school fee operations, configure your first academic term with its start date, end date, and fee payment deadline."
+            actionLabel="Create First Academic Term"
+            onAction={() => setIsCreateModalOpen(true)}
+            className="col-span-1 md:col-span-3"
+          />
         ) : (
           terms?.map((term) => (
             <Card

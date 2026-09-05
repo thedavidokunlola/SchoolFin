@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
 import { SCHOOL_CLASSES } from "@/lib/constants";
+import { EmptyState } from "@/components/ui/EmptyState";
 import {
   Search,
   UserPlus,
@@ -22,6 +23,7 @@ import {
   Edit2,
   Trash2,
   AlertTriangle,
+  GraduationCap,
 } from "lucide-react";
 
 interface StudentListItem {
@@ -284,8 +286,29 @@ export function BursarStudentsView() {
                 </tr>
               ) : data?.students.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-400">
-                    No students found matching query.
+                  <td colSpan={6} className="p-4">
+                    {search || selectedClass || statusFilter !== "all" ? (
+                      <EmptyState
+                        icon={<Search className="w-6 h-6" />}
+                        title="No Matching Students"
+                        description="No students matched your search criteria or class filters. Try adjusting or clearing your filters."
+                        actionLabel="Clear Filters"
+                        onAction={() => {
+                          setSearch("");
+                          setSelectedClass("");
+                          setStatusFilter("all");
+                        }}
+                        compact
+                      />
+                    ) : (
+                      <EmptyState
+                        icon={<GraduationCap className="w-6 h-6" />}
+                        title="No Students Enrolled Yet"
+                        description="Your school roster is currently empty. Begin by enrolling students with their admission number, name, and class."
+                        actionLabel="Enroll First Student"
+                        onAction={() => setIsCreateStudentOpen(true)}
+                      />
+                    )}
                   </td>
                 </tr>
               ) : (

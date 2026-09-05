@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
 import { SCHOOL_CLASSES } from "@/lib/constants";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { Plus, Trash2, Edit2, AlertTriangle, FileText } from "lucide-react";
 
 interface FeeStructureItem {
@@ -245,9 +246,17 @@ export function BursarFeeStructuresView() {
             Loading fee structures...
           </div>
         ) : (structures as FeeStructureItem[] | undefined)?.length === 0 ? (
-          <div className="col-span-3 p-12 text-center text-xs text-slate-400">
-            No fee structures configured. Click &quot;Create Fee Structure&quot; to build one.
-          </div>
+          <EmptyState
+            icon={<FileText className="w-6 h-6" />}
+            title="No Fee Structures Configured"
+            description="Fee structures define the termly billable line items (e.g., Tuition, Development Levy, Books, ICT) for each class."
+            actionLabel="Create First Fee Structure"
+            onAction={() => {
+              setTermId(activeTerm?.id || "");
+              setIsCreateOpen(true);
+            }}
+            className="col-span-1 md:col-span-2 lg:col-span-3"
+          />
         ) : (
           (structures as FeeStructureItem[] | undefined)?.map((structure) => (
             <Card key={structure.id} className="flex flex-col justify-between shadow-xs hover:border-slate-300 transition-all">

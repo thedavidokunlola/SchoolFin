@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
-import { UserPlus } from "lucide-react";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { UserPlus, Users } from "lucide-react";
 
 export function ProprietorUsersView() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -104,8 +105,14 @@ export function ProprietorUsersView() {
                 </tr>
               ) : staff?.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-400">
-                    No staff accounts found.
+                  <td colSpan={6} className="p-4">
+                    <EmptyState
+                      icon={<Users className="w-6 h-6" />}
+                      title="No Staff Accounts Found"
+                      description="Create Bursar and Accountant user accounts to delegate school billing, receipts, and audit reporting."
+                      actionLabel="Create Staff Account"
+                      onAction={() => setIsCreateModalOpen(true)}
+                    />
                   </td>
                 </tr>
               ) : (

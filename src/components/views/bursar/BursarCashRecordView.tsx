@@ -9,6 +9,7 @@ import { trpc } from "@/lib/trpc/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { Receipt, AlertTriangle, AlertCircle } from "lucide-react";
 
 export function BursarCashRecordView() {
@@ -115,8 +116,17 @@ export function BursarCashRecordView() {
         </div>
       )}
 
-      <Card className="shadow-xs">
-        <form onSubmit={handleSubmit}>
+      {(!studentsData?.students || studentsData.students.length === 0) ? (
+        <EmptyState
+          icon={<Receipt className="w-6 h-6" />}
+          title="No Enrolled Students"
+          description="To record a cash school fees payment and generate official receipts, you must first enroll students in the school roster."
+          actionLabel="Enroll Students First"
+          onAction={() => router.push("/bursar/dashboard?tab=students")}
+        />
+      ) : (
+        <Card className="shadow-xs">
+          <form onSubmit={handleSubmit}>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Receipt className="w-4 h-4 text-emerald-700" />
@@ -223,6 +233,7 @@ export function BursarCashRecordView() {
           </CardFooter>
         </form>
       </Card>
+      )}
     </div>
   );
 }

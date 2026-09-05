@@ -25,7 +25,6 @@ import {
   FileSpreadsheet,
   MessageSquare,
   UserX,
-  Menu,
   X,
 } from "lucide-react";
 
@@ -184,11 +183,11 @@ export function DashboardLayout({ children, activeTab, onTabChange }: DashboardL
   };
 
   const navItems = role ? navItemsByRole[role] || [] : [];
-  const roleVariant =
+  const roleVariant: "brand" | "info" | "warning" | "success" =
     role === "PROPRIETOR"
       ? "brand"
       : role === "BURSAR"
-      ? "accent"
+      ? "info"
       : role === "ACCOUNTANT"
       ? "warning"
       : "success";
@@ -248,45 +247,37 @@ export function DashboardLayout({ children, activeTab, onTabChange }: DashboardL
       {/* Nav Links */}
       <nav className="flex-1 p-3.5 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
-          const isActive = activeTab
-            ? item.tabKey === activeTab
-            : pathname === item.href.split("?")[0];
-
+          const isActive = activeTab ? activeTab === item.tabKey : pathname === item.href;
           return (
             <Link
-              key={item.tabKey || item.href}
+              key={item.href}
               href={item.href}
               onClick={(e) => {
-                if (onTabChange && item.tabKey) {
+                if (onTabChange) {
                   e.preventDefault();
                   onTabChange(item.tabKey);
-                }
-                if (isMobile) {
-                  setIsMobileMenuOpen(false);
+                  if (isMobile) setIsMobileMenuOpen(false);
                 }
               }}
-              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
+              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
                 isActive
-                  ? "bg-[#EEF1FF] text-[#2B35AF] border border-[#DBE1FF] shadow-2xs font-bold"
+                  ? "bg-[#2B35AF] text-white font-semibold shadow-xs"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
               }`}
             >
-              {item.icon}
+              <span className={isActive ? "text-white" : "text-slate-400"}>{item.icon}</span>
               <span>{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      {/* Bottom Actions */}
-      <div className="p-4 border-t border-slate-100">
+      {/* Logout button */}
+      <div className="p-3.5 border-t border-slate-100">
         <button
           type="button"
-          onClick={async () => {
-            await signOut({ redirect: false, callbackUrl: "/login" });
-            window.location.href = "/login";
-          }}
-          className="w-full flex items-center gap-2.5 px-3.5 py-2 text-xs font-bold text-slate-500 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all duration-150 cursor-pointer"
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-600 hover:text-red-600 hover:bg-red-50/80 transition-colors"
         >
           <LogOut className="w-4 h-4" />
           <span>Sign Out</span>
@@ -327,7 +318,9 @@ export function DashboardLayout({ children, activeTab, onTabChange }: DashboardL
               className="md:hidden p-2 -ml-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
               aria-label="Open navigation menu"
             >
-              <Menu className="w-5 h-5" />
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
             </button>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />

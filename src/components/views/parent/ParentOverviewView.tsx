@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { trpc } from "@/lib/trpc/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { GraduationCap, ArrowRight } from "lucide-react";
 
 export interface ParentOverviewViewProps {
@@ -47,13 +48,11 @@ export function ParentOverviewView({ onSelectStudent }: ParentOverviewViewProps)
             Loading family profiles...
           </div>
         ) : linkedStudents.length === 0 ? (
-          <Card className="p-12 text-center text-slate-500 text-xs shadow-xs">
-            <GraduationCap className="w-10 h-10 mx-auto text-slate-300 mb-2" />
-            <p className="font-semibold text-slate-700">No students linked to your account yet.</p>
-            <p className="text-slate-400 mt-0.5">
-              Contact the school bursar to link your child's admission record.
-            </p>
-          </Card>
+          <EmptyState
+            icon={<GraduationCap className="w-6 h-6" />}
+            title="No Children Linked Yet"
+            description="No student accounts have been linked to your parent portal profile yet. Please contact the school bursary with your child's admission number to link their record."
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {linkedStudents.map((student) => (

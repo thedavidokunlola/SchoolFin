@@ -22,6 +22,7 @@ export type BursarTab =
   | "debtors"
   | "fees"
   | "post"
+  | "posting"
   | "installments"
   | "cash"
   | "debt-collection"
@@ -29,28 +30,30 @@ export type BursarTab =
 
 function BursarPortalContent() {
   const searchParams = useSearchParams();
-  const initialTab = (searchParams.get("tab") as BursarTab) || "overview";
+  const rawTab = searchParams.get("tab") as BursarTab | null;
+  const initialTab = rawTab ? (rawTab === "post" ? "posting" : rawTab) : "overview";
   const [activeTab, setActiveTab] = useState<BursarTab>(initialTab);
 
   useEffect(() => {
-    const currentTab = (searchParams.get("tab") as BursarTab) || "overview";
+    const tabParam = searchParams.get("tab") as BursarTab | null;
+    const currentTab = tabParam ? (tabParam === "post" ? "posting" : tabParam) : "overview";
     setActiveTab(currentTab);
   }, [searchParams]);
 
   const handleTabChange = (tab: string) => {
-    const validTab = tab as BursarTab;
-    setActiveTab(validTab);
-    const newUrl = validTab === "overview" ? "/bursar/dashboard" : `/bursar/dashboard?tab=${validTab}`;
+    const normalizedTab = (tab === "post" ? "posting" : tab) as BursarTab;
+    setActiveTab(normalizedTab);
+    const newUrl = normalizedTab === "overview" ? "/bursar/dashboard" : `/bursar/dashboard?tab=${normalizedTab}`;
     window.history.pushState(null, "", newUrl);
   };
 
   return (
-    <DashboardLayout activeTab={activeTab} onTabChange={handleTabChange}>
+    <DashboardLayout activeTab={activeTab === "post" ? "posting" : activeTab} onTabChange={handleTabChange}>
       {activeTab === "overview" && <BursarOverviewView onNavigate={handleTabChange} />}
       {activeTab === "students" && <BursarStudentsView />}
       {activeTab === "debtors" && <BursarDebtorsView />}
       {activeTab === "fees" && <BursarFeeStructuresView />}
-      {activeTab === "post" && <BursarFeePostView onNavigate={handleTabChange} />}
+      {(activeTab === "post" || activeTab === "posting") && <BursarFeePostView onNavigate={handleTabChange} />}
       {activeTab === "installments" && <BursarInstallmentsView />}
       {activeTab === "cash" && <BursarCashRecordView />}
       {activeTab === "debt-collection" && <BursarDebtCollectionView />}
