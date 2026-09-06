@@ -3,7 +3,7 @@
 // src/app/(auth)/accept-invite/page.tsx
 // Parent portal invite acceptance page
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/Button";
 import { InteractiveBackground } from "@/components/ui/InteractiveBackground";
 import { Lock, AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
 
-export default function AcceptInvitePage() {
+function AcceptInviteContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
 
@@ -172,5 +172,19 @@ export default function AcceptInvitePage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function AcceptInvitePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
+          <div className="w-8 h-8 border-3 border-[#2B35AF] border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <AcceptInviteContent />
+    </Suspense>
   );
 }

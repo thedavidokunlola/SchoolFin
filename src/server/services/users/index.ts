@@ -85,7 +85,7 @@ export async function createParentAccount(
   actingUserId: string,
 ) {
   const email = input.email.toLowerCase().trim();
-  let existingUser = await prisma.user.findUnique({ where: { email } });
+  const existingUser = await prisma.user.findUnique({ where: { email } });
 
   const parent = await prisma.$transaction(async (tx) => {
     let parentUser = existingUser;

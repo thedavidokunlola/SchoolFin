@@ -83,7 +83,7 @@ export function ParentInstallmentsView({
           Flexible Installment Plans
         </h1>
         <p className="text-xs text-slate-500 mt-0.5">
-          Spread your child's term fees across structured automatic payments.
+          Spread your child&apos;s term fees across structured automatic payments.
         </p>
       </div>
 
