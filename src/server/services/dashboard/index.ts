@@ -33,13 +33,27 @@ export async function getProprietorMetrics(termId?: string) {
             where: { termId: activeTermId, type: "REVERSAL" },
           })
         : { _sum: { amount: new Decimal("0.00") } },
-      prisma.payment.aggregate({
-        _sum: { amount: true },
-        where: { status: "SUCCESS" },
-      }),
-      prisma.manualCredit.aggregate({
-        _sum: { amount: true },
-      }),
+      activeTermId
+        ? prisma.payment.aggregate({
+            _sum: { amount: true },
+            where: {
+              status: "SUCCESS",
+              student: {
+                feePostings: { some: { termId: activeTermId } },
+              },
+            },
+          })
+        : { _sum: { amount: new Decimal("0.00") } },
+      activeTermId
+        ? prisma.manualCredit.aggregate({
+            _sum: { amount: true },
+            where: {
+              student: {
+                feePostings: { some: { termId: activeTermId } },
+              },
+            },
+          })
+        : { _sum: { amount: new Decimal("0.00") } },
     ]);
 
   const zero = new Decimal("0.00");
@@ -58,9 +72,10 @@ export async function getProprietorMetrics(termId?: string) {
     }
   }
 
-  // Recent transactions
+  // Recent transactions scoped to active term if present
   const [recentPostings, recentCredits] = await Promise.all([
     prisma.feePosting.findMany({
+      where: activeTermId ? { termId: activeTermId } : undefined,
       take: 5,
       orderBy: { postedAt: "desc" },
       include: {
@@ -69,6 +84,13 @@ export async function getProprietorMetrics(termId?: string) {
       },
     }),
     prisma.manualCredit.findMany({
+      where: activeTermId
+        ? {
+            student: {
+              feePostings: { some: { termId: activeTermId } },
+            },
+          }
+        : undefined,
       take: 5,
       orderBy: { recordedAt: "desc" },
       include: {

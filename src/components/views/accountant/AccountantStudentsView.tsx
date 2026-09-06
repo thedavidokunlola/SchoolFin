@@ -9,8 +9,9 @@ import { trpc } from "@/lib/trpc/client";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { SCHOOL_CLASSES } from "@/lib/constants";
-import { Search, ChevronRight } from "lucide-react";
+import { Search, ChevronRight, GraduationCap } from "lucide-react";
 
 export function AccountantStudentsView() {
   const [search, setSearch] = useState("");
@@ -94,8 +95,28 @@ export function AccountantStudentsView() {
                 </tr>
               ) : data?.students.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-400">
-                    No student records found.
+                  <td colSpan={6} className="p-6">
+                    {search || selectedClass || statusFilter !== "all" ? (
+                      <EmptyState
+                        icon={<Search className="w-6 h-6 text-slate-600" />}
+                        title="No Matching Students Found"
+                        description="No student fee accounts match your search filters. Try clearing or broadening your search criteria."
+                        actionLabel="Clear Search Filters"
+                        onAction={() => {
+                          setSearch("");
+                          setSelectedClass("");
+                          setStatusFilter("all");
+                        }}
+                        compact
+                      />
+                    ) : (
+                      <EmptyState
+                        icon={<GraduationCap className="w-6 h-6 text-[#2B35AF]" />}
+                        title="No Enrolled Students"
+                        description="The school roster is currently empty. As soon as the bursary enrolls students, their financial ledgers will appear here for audit review."
+                        compact
+                      />
+                    )}
                   </td>
                 </tr>
               ) : (

@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
-import { Plus, FileText } from "lucide-react";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Plus, FileText, Bell, History } from "lucide-react";
 import type { DebtStage, NotificationChannel } from "@prisma/client";
 
 export function BursarDebtCollectionView() {
@@ -193,8 +194,15 @@ export function BursarDebtCollectionView() {
                   </tr>
                 ) : rules?.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="p-8 text-center text-slate-400">
-                      No automated collection rules configured yet.
+                    <td colSpan={5} className="p-6">
+                      <EmptyState
+                        icon={<Bell className="w-6 h-6 text-[#2B35AF]" />}
+                        title="No Automated Collection Rules"
+                        description="Configure automated escalation rules to send gentle SMS and Email reminders to parents before and after the term fee due date."
+                        actionLabel="Create First Debt Rule"
+                        onAction={() => setIsRuleModalOpen(true)}
+                        compact
+                      />
                     </td>
                   </tr>
                 ) : (
@@ -236,8 +244,14 @@ export function BursarDebtCollectionView() {
               Loading templates...
             </div>
           ) : templates?.length === 0 ? (
-            <div className="col-span-2 p-8 text-center text-slate-400 text-xs">
-              No templates created yet. Click "New Template" to start.
+            <div className="col-span-2">
+              <EmptyState
+                icon={<FileText className="w-6 h-6 text-[#2B35AF]" />}
+                title="No Communication Templates"
+                description="Customise SMS & Email message templates with dynamic placeholders like student name, balance, and online payment links."
+                actionLabel="Create First Template"
+                onAction={() => setIsTemplateModalOpen(true)}
+              />
             </div>
           ) : (
             templates?.map((tmpl) => (
@@ -301,8 +315,13 @@ export function BursarDebtCollectionView() {
                   </tr>
                 ) : eventHistory?.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-slate-400">
-                      No automated messages triggered yet.
+                    <td colSpan={6} className="p-6">
+                      <EmptyState
+                        icon={<History className="w-6 h-6 text-slate-500" />}
+                        title="No Debt Messages Dispatched Yet"
+                        description="When the daily automated 08:00 WAT debt scan runs, all dispatched SMS and Email reminders will be logged here with deduplication tracing."
+                        compact
+                      />
                     </td>
                   </tr>
                 ) : (

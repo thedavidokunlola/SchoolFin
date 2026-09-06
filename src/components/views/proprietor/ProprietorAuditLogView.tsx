@@ -8,7 +8,8 @@ import { trpc } from "@/lib/trpc/client";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { ShieldCheck, AlertTriangle } from "lucide-react";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { ShieldCheck, AlertTriangle, FileText } from "lucide-react";
 
 export function ProprietorAuditLogView() {
   const [isSensitiveOnly, setIsSensitiveOnly] = useState(false);
@@ -66,8 +67,24 @@ export function ProprietorAuditLogView() {
                 </tr>
               ) : data?.logs?.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-400">
-                    No audit log entries matching criteria.
+                  <td colSpan={6} className="p-6">
+                    {isSensitiveOnly ? (
+                      <EmptyState
+                        icon={<AlertTriangle className="w-6 h-6 text-amber-600" />}
+                        title="No Sensitive Actions Found"
+                        description="There are currently no sensitive actions (such as manual credits, role alterations, or waivers) recorded in the audit trail."
+                        actionLabel="Show All Audit Logs"
+                        onAction={() => setIsSensitiveOnly(false)}
+                        compact
+                      />
+                    ) : (
+                      <EmptyState
+                        icon={<FileText className="w-6 h-6 text-slate-500" />}
+                        title="Audit Log is Empty"
+                        description="All administrative, payment, and fee posting events will be immutably recorded here with exact actor attribution and timestamp."
+                        compact
+                      />
+                    )}
                   </td>
                 </tr>
               ) : (

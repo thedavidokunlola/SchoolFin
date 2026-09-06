@@ -85,15 +85,16 @@ export async function createParentAccount(
   actingUserId: string,
 ) {
   const email = input.email.toLowerCase().trim();
-  let parent = await prisma.user.findUnique({ where: { email } });
+  let existingUser = await prisma.user.findUnique({ where: { email } });
 
-  return await prisma.$transaction(async (tx) => {
-    if (!parent) {
+  const parent = await prisma.$transaction(async (tx) => {
+    let parentUser = existingUser;
+    if (!parentUser) {
       // Create user with unassigned password (must accept invite)
       const dummyHash = await bcrypt.hash(Math.random().toString(), 12);
       const encryptedPhone = input.phone ? encrypt(input.phone.trim()) : null;
 
-      parent = await tx.user.create({
+      parentUser = await tx.user.create({
         data: {
           email,
           firstName: input.firstName.trim(),
@@ -110,8 +111,8 @@ export async function createParentAccount(
           userId: actingUserId,
           action: AUDIT_ACTIONS.USER_CREATED,
           entity: "User",
-          entityId: parent.id,
-          metadata: { email: parent.email, role: "PARENT" },
+          entityId: parentUser.id,
+          metadata: { email: parentUser.email, role: "PARENT" },
           isSensitive: false,
         },
         tx,
@@ -122,13 +123,13 @@ export async function createParentAccount(
       await tx.parentStudentLink.upsert({
         where: {
           parentId_studentId: {
-            parentId: parent.id,
+            parentId: parentUser.id,
             studentId: input.studentId,
           },
         },
         update: { isActive: true, relationship: input.relationship ?? "Parent" },
         create: {
-          parentId: parent.id,
+          parentId: parentUser.id,
           studentId: input.studentId,
           relationship: input.relationship ?? "Parent",
           isActive: true,
@@ -136,18 +137,20 @@ export async function createParentAccount(
       });
     }
 
-    // Generate invite token
-    const invite = await createParentInvite(parent.id, actingUserId);
-
-    return {
-      id: parent.id,
-      email: parent.email,
-      firstName: parent.firstName,
-      lastName: parent.lastName,
-      inviteToken: invite.inviteToken,
-      expiresAt: invite.expiresAt,
-    };
+    return parentUser;
   });
+
+  // Generate invite token AFTER transaction has committed to database
+  const invite = await createParentInvite(parent.id, actingUserId);
+
+  return {
+    id: parent.id,
+    email: parent.email,
+    firstName: parent.firstName,
+    lastName: parent.lastName,
+    inviteToken: invite.inviteToken,
+    expiresAt: invite.expiresAt,
+  };
 }
 
 export async function listStaffAccounts() {

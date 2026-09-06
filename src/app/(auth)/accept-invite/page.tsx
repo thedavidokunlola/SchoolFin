@@ -11,7 +11,7 @@ import { schoolConfig } from "../../../../school.config";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { InteractiveBackground } from "@/components/ui/InteractiveBackground";
-import { Lock, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Lock, AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
 
 export default function AcceptInvitePage() {
   const searchParams = useSearchParams();
@@ -19,6 +19,8 @@ export default function AcceptInvitePage() {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [userEmail, setUserEmail] = useState("");
@@ -105,13 +107,25 @@ export default function AcceptInvitePage() {
                   <div className="relative group">
                     <Lock className="w-4 h-4 text-slate-400 group-focus-within:text-[#2B35AF] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none transition-colors" />
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="At least 8 characters"
-                      className="w-full pl-10 pr-3.5 py-3 bg-white border border-slate-200 hover:border-slate-300 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2B35AF]/20 focus:border-[#2B35AF] transition-all"
+                      className="w-full pl-10 pr-11 py-3 bg-white border border-slate-200 hover:border-slate-300 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2B35AF]/20 focus:border-[#2B35AF] transition-all"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 focus:outline-none focus:text-slate-600 rounded-lg transition-colors"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
                   </div>
                 </div>
 
@@ -120,13 +134,25 @@ export default function AcceptInvitePage() {
                   <div className="relative group">
                     <Lock className="w-4 h-4 text-slate-400 group-focus-within:text-[#2B35AF] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none transition-colors" />
                     <input
-                      type="password"
+                      type={showConfirmPassword ? "text" : "password"}
                       required
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Repeat password"
-                      className="w-full pl-10 pr-3.5 py-3 bg-white border border-slate-200 hover:border-slate-300 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2B35AF]/20 focus:border-[#2B35AF] transition-all"
+                      className="w-full pl-10 pr-11 py-3 bg-white border border-slate-200 hover:border-slate-300 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2B35AF]/20 focus:border-[#2B35AF] transition-all"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 focus:outline-none focus:text-slate-600 rounded-lg transition-colors"
+                      aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
                   </div>
                 </div>
               </CardContent>

@@ -3,10 +3,13 @@
 // src/components/views/bursar/BursarOverviewView.tsx
 // Operational Bursar Command Centre with live financial metrics, collection progress, and activity feeds
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { SchoolOnboardingModal } from "@/components/common/SchoolOnboardingModal";
 import {
   Users,
   CreditCard,
@@ -16,6 +19,9 @@ import {
   Calendar,
   ArrowRight,
   ShieldCheck,
+  GraduationCap,
+  Sparkles,
+  X,
 } from "lucide-react";
 
 export interface BursarOverviewViewProps {
@@ -23,6 +29,17 @@ export interface BursarOverviewViewProps {
 }
 
 export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
+  const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const shown = localStorage.getItem("schoolfin_onboarding_shown") === "true";
+      if (!shown) {
+        setIsOnboardingModalOpen(true);
+      }
+    }
+  }, []);
+
   const { data: metrics, isLoading: isLoadingMetrics } = trpc.dashboard.getMetrics.useQuery();
   const { data: terms } = trpc.terms.getAll.useQuery();
   const activeTerm = terms?.find((t) => t.isActive);
@@ -39,6 +56,13 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
+      {/* Onboarding Interactive Modal - First thing to see on login */}
+      <SchoolOnboardingModal
+        isOpen={isOnboardingModalOpen}
+        onClose={() => setIsOnboardingModalOpen(false)}
+        onNavigate={onNavigate}
+      />
+
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
         <div>
@@ -68,73 +92,21 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setIsOnboardingModalOpen(true)}
+            className="text-xs gap-1.5 text-[#2B35AF] border-indigo-200 hover:bg-indigo-50 shadow-2xs"
+          >
+            <Sparkles className="w-3.5 h-3.5" /> Setup Guide
+          </Button>
+
           <Badge variant={activeTerm ? "success" : "warning"} className="px-3 py-1 font-semibold text-xs">
             {activeTerm ? "Active Academic Term" : "Term Inactive"}
           </Badge>
         </div>
       </div>
-
-      {/* Fresh School Setup Onboarding Guide (Shown when starting up a new school) */}
-      {(metrics?.activeStudentsCount === 0 || totalPosted === 0 || !activeTerm) && (
-        <Card className="border-indigo-100 bg-gradient-to-br from-indigo-50/70 via-white to-blue-50/50 shadow-xs p-5 sm:p-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-indigo-100/80 pb-4 mb-4">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-100/80 px-2 py-0.5 rounded-full">
-                New School Setup
-              </span>
-              <h2 className="text-base font-bold text-slate-900 mt-1">
-                Getting Started with SchoolFin
-              </h2>
-              <p className="text-xs text-slate-600 mt-0.5">
-                Follow these 4 quick steps to configure your school&apos;s financial portal:
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className={`p-3.5 rounded-xl border ${activeTerm ? "bg-emerald-50/60 border-emerald-200 text-emerald-900" : "bg-white border-slate-200 text-slate-700"}`}>
-              <span className="text-[10px] font-bold uppercase tracking-wider block text-slate-400">Step 1</span>
-              <p className="text-xs font-bold mt-1">Active Term</p>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                {activeTerm ? `✓ Active: ${activeTerm.name}` : "Proprietor activates current term"}
-              </p>
-            </div>
-
-            <div
-              onClick={() => onNavigate?.("students")}
-              className={`p-3.5 rounded-xl border transition-all cursor-pointer ${(metrics?.activeStudentsCount ?? 0) > 0 ? "bg-emerald-50/60 border-emerald-200 text-emerald-900" : "bg-white hover:border-[#2B35AF] hover:shadow-2xs border-slate-200 text-slate-700"}`}
-            >
-              <span className="text-[10px] font-bold uppercase tracking-wider block text-slate-400">Step 2</span>
-              <p className="text-xs font-bold mt-1">Enroll Students</p>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                {(metrics?.activeStudentsCount ?? 0) > 0 ? `✓ ${(metrics?.activeStudentsCount ?? 0)} Enrolled` : "Add student admission records →"}
-              </p>
-            </div>
-
-            <div
-              onClick={() => onNavigate?.("fees")}
-              className="p-3.5 rounded-xl border bg-white hover:border-[#2B35AF] hover:shadow-2xs border-slate-200 text-slate-700 transition-all cursor-pointer"
-            >
-              <span className="text-[10px] font-bold uppercase tracking-wider block text-slate-400">Step 3</span>
-              <p className="text-xs font-bold mt-1">Fee Structures</p>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Define tuition & levies per class →
-              </p>
-            </div>
-
-            <div
-              onClick={() => onNavigate?.("posting")}
-              className="p-3.5 rounded-xl border bg-white hover:border-[#2B35AF] hover:shadow-2xs border-slate-200 text-slate-700 transition-all cursor-pointer"
-            >
-              <span className="text-[10px] font-bold uppercase tracking-wider block text-slate-400">Step 4</span>
-              <p className="text-xs font-bold mt-1">Post Term Fees</p>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Apply fees in bulk or per student →
-              </p>
-            </div>
-          </div>
-        </Card>
-      )}
 
       {/* Financial KPI Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -306,8 +278,15 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
           </CardHeader>
           <CardContent className="p-0">
             {(!incomeData?.classBreakdowns || incomeData.classBreakdowns.length === 0) ? (
-              <div className="p-6 text-center text-xs text-slate-400">
-                No class fee data available for this term yet.
+              <div className="p-4">
+                <EmptyState
+                  icon={<GraduationCap className="w-5 h-5 text-indigo-600" />}
+                  title="No Class Performance Data"
+                  description="Fee collection rates and outstanding balances will appear here as soon as fee structures are posted to classes."
+                  actionLabel={onNavigate ? "Post Fees to Class" : undefined}
+                  onAction={onNavigate ? () => onNavigate("posting") : undefined}
+                  compact
+                />
               </div>
             ) : (
               <div className="divide-y divide-slate-100 max-h-[220px] overflow-y-auto">
@@ -378,8 +357,15 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
           <CardContent className="p-0">
             <div className="divide-y divide-slate-100">
               {(!metrics?.recentCredits || metrics.recentCredits.length === 0) ? (
-                <div className="p-6 text-center text-xs text-slate-400">
-                  No cash receipts recorded yet this session.
+                <div className="p-4">
+                  <EmptyState
+                    icon={<Receipt className="w-5 h-5 text-emerald-600" />}
+                    title="No Cash Receipts Yet"
+                    description="Manual cash fee credits recorded by the bursar with official sequentially generated receipts will appear here."
+                    actionLabel={onNavigate ? "Record Cash Payment" : undefined}
+                    onAction={onNavigate ? () => onNavigate("cash") : undefined}
+                    compact
+                  />
                 </div>
               ) : (
                 metrics.recentCredits.map((credit) => (
@@ -444,8 +430,15 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
           <CardContent className="p-0">
             <div className="divide-y divide-slate-100">
               {(!metrics?.recentPostings || metrics.recentPostings.length === 0) ? (
-                <div className="p-6 text-center text-xs text-slate-400">
-                  No fee postings committed yet.
+                <div className="p-4">
+                  <EmptyState
+                    icon={<TrendingUp className="w-5 h-5 text-indigo-600" />}
+                    title="No Fee Postings Recorded"
+                    description="Fee structure commitments posted to classes or individual student ledgers will be listed here in real time."
+                    actionLabel={onNavigate ? "Post Fees Now" : undefined}
+                    onAction={onNavigate ? () => onNavigate("posting") : undefined}
+                    compact
+                  />
                 </div>
               ) : (
                 metrics.recentPostings.map((posting) => (

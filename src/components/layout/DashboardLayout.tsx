@@ -276,8 +276,11 @@ export function DashboardLayout({ children, activeTab, onTabChange }: DashboardL
       <div className="p-3.5 border-t border-slate-100">
         <button
           type="button"
-          onClick={() => signOut({ callbackUrl: "/login" })}
-          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-600 hover:text-red-600 hover:bg-red-50/80 transition-colors"
+          onClick={async () => {
+            await signOut({ callbackUrl: "/login", redirect: false });
+            window.location.href = "/login";
+          }}
+          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-600 hover:text-red-600 hover:bg-red-50/80 transition-colors cursor-pointer"
         >
           <LogOut className="w-4 h-4" />
           <span>Sign Out</span>

@@ -295,13 +295,29 @@ export function BursarDebtorsView() {
                 </tr>
               ) : debtorsData?.debtors.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="p-4">
-                    <EmptyState
-                      icon={<ShieldCheck className="w-6 h-6 text-emerald-600" />}
-                      title="No Outstanding Debtors"
-                      description="All student accounts are currently settled in full, or fee structures have not yet been posted to student ledgers for this academic term."
-                      compact
-                    />
+                  <td colSpan={8} className="p-6">
+                    {searchTerm || selectedClass || minAmount || minOverdueDays ? (
+                      <EmptyState
+                        icon={<Search className="w-6 h-6 text-slate-600" />}
+                        title="No Matching Debtors Found"
+                        description="No student accounts match your current search criteria or debt filters. Try resetting the filters to view the full list."
+                        actionLabel="Clear All Filters"
+                        onAction={() => {
+                          setSearchTerm("");
+                          setSelectedClass("");
+                          setMinAmount(undefined);
+                          setMinOverdueDays(undefined);
+                        }}
+                        compact
+                      />
+                    ) : (
+                      <EmptyState
+                        icon={<ShieldCheck className="w-6 h-6 text-emerald-600" />}
+                        title="No Outstanding Debtors"
+                        description="All student accounts are currently settled in full, or fee structures have not yet been posted to student ledgers for this academic term."
+                        compact
+                      />
+                    )}
                   </td>
                 </tr>
               ) : (

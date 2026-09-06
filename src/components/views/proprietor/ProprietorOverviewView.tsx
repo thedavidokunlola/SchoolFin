@@ -3,10 +3,13 @@
 // src/components/views/proprietor/ProprietorOverviewView.tsx
 // Proprietor Overview component with financial KPI metrics and recent transactions
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { SchoolOnboardingModal } from "@/components/common/SchoolOnboardingModal";
 import {
   Users,
   CreditCard,
@@ -14,9 +17,21 @@ import {
   AlertCircle,
   TrendingUp,
   Receipt,
+  Sparkles,
 } from "lucide-react";
 
 export function ProprietorOverviewView() {
+  const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const shown = localStorage.getItem("schoolfin_onboarding_shown") === "true";
+      if (!shown) {
+        setIsOnboardingModalOpen(true);
+      }
+    }
+  }, []);
+
   const { data: metrics, isLoading } = trpc.dashboard.getMetrics.useQuery();
   const { data: terms } = trpc.terms.getAll.useQuery();
 
@@ -24,6 +39,12 @@ export function ProprietorOverviewView() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
+      {/* Onboarding Interactive Modal */}
+      <SchoolOnboardingModal
+        isOpen={isOnboardingModalOpen}
+        onClose={() => setIsOnboardingModalOpen(false)}
+      />
+
       {/* Top Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -49,6 +70,16 @@ export function ProprietorOverviewView() {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setIsOnboardingModalOpen(true)}
+            className="text-xs gap-1.5 text-[#2B35AF] border-indigo-200 hover:bg-indigo-50 shadow-2xs"
+          >
+            <Sparkles className="w-3.5 h-3.5" /> Setup Guide
+          </Button>
+
           <Badge variant={activeTerm ? "success" : "warning"} className="px-3 py-1">
             {activeTerm ? "Academic Session Active" : "Term Setup Required"}
           </Badge>
@@ -175,8 +206,13 @@ export function ProprietorOverviewView() {
           <CardContent className="p-0">
             <div className="divide-y divide-slate-100">
               {metrics?.recentCredits?.length === 0 ? (
-                <div className="p-6 text-center text-xs text-slate-400">
-                  No cash payments recorded yet.
+                <div className="p-4">
+                  <EmptyState
+                    icon={<Receipt className="w-5 h-5 text-emerald-600" />}
+                    title="No Cash Payments Recorded"
+                    description="Manual cash payments and issued official receipts recorded by the bursary will appear here in real time."
+                    compact
+                  />
                 </div>
               ) : (
                 metrics?.recentCredits?.map((credit) => (
@@ -229,8 +265,13 @@ export function ProprietorOverviewView() {
           <CardContent className="p-0">
             <div className="divide-y divide-slate-100">
               {metrics?.recentPostings?.length === 0 ? (
-                <div className="p-6 text-center text-xs text-slate-400">
-                  No fees posted yet.
+                <div className="p-4">
+                  <EmptyState
+                    icon={<TrendingUp className="w-5 h-5 text-indigo-600" />}
+                    title="No Fee Postings Yet"
+                    description="Fee schedules posted in bulk by class or individually to student ledgers will be listed here."
+                    compact
+                  />
                 </div>
               ) : (
                 metrics?.recentPostings?.map((posting) => (
