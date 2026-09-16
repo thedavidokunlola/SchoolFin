@@ -21,7 +21,6 @@ import {
   LogOut,
   Calendar,
   ShieldCheck,
-  CreditCard,
   FileSpreadsheet,
   MessageSquare,
   UserX,
@@ -333,19 +332,8 @@ export function DashboardLayout({ children, activeTab, onTabChange }: DashboardL
             </div>
           </div>
 
-          {/* Right: Currency & Timezone Badges */}
+          {/* Right: Actions / Status */}
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-600 shadow-2xs">
-              <CreditCard className="w-3.5 h-3.5 text-[#2B35AF]" />
-              <span className="hidden xs:inline">Currency:</span>
-              <strong className="text-slate-900 font-bold">{schoolConfig.currency}</strong>
-            </div>
-
-            <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-600 shadow-2xs">
-              <Calendar className="w-3.5 h-3.5 text-[#0284C7]" />
-              <span className="hidden sm:inline">Timezone:</span>
-              <strong className="text-slate-900 font-bold text-[11px] sm:text-xs">{schoolConfig.timezone}</strong>
-            </div>
           </div>
         </header>
 
