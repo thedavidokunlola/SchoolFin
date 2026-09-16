@@ -8,6 +8,7 @@ import { trpc } from "@/lib/trpc/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { Skeleton } from "@/components/ui/Skeleton";
 import {
   Users,
   CreditCard,
@@ -69,9 +70,13 @@ export function ProprietorOverviewView() {
               </div>
             </div>
             <div className="mt-3 sm:mt-4">
-              <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-                {isLoading ? "..." : metrics?.activeStudentsCount ?? 0}
-              </span>
+              {isLoading ? (
+                <Skeleton className="h-8 w-16 mb-1" />
+              ) : (
+                <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                  {metrics?.activeStudentsCount ?? 0}
+                </span>
+              )}
               <span className="block text-[10px] sm:text-[11px] text-slate-400 mt-0.5 sm:mt-1">
                 Enrolled & Active
               </span>
@@ -90,14 +95,16 @@ export function ProprietorOverviewView() {
               </div>
             </div>
             <div className="mt-3 sm:mt-4">
-              <span className="text-xl sm:text-2xl font-extrabold text-slate-900 truncate block">
-                {isLoading
-                  ? "..."
-                  : Number(metrics?.totalPosted ?? 0).toLocaleString("en-NG", {
-                      style: "currency",
-                      currency: "NGN",
-                    })}
-              </span>
+              {isLoading ? (
+                <Skeleton className="h-7 w-28 mb-1" />
+              ) : (
+                <span className="text-xl sm:text-2xl font-extrabold text-slate-900 truncate block">
+                  {Number(metrics?.totalPosted ?? 0).toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                  })}
+                </span>
+              )}
               <span className="block text-[10px] sm:text-[11px] text-slate-400 mt-0.5 sm:mt-1">
                 Net Charges this Term
               </span>
@@ -116,14 +123,16 @@ export function ProprietorOverviewView() {
               </div>
             </div>
             <div className="mt-3 sm:mt-4">
-              <span className="text-xl sm:text-2xl font-extrabold text-emerald-700 truncate block">
-                {isLoading
-                  ? "..."
-                  : Number(metrics?.totalCollected ?? 0).toLocaleString("en-NG", {
-                      style: "currency",
-                      currency: "NGN",
-                    })}
-              </span>
+              {isLoading ? (
+                <Skeleton className="h-7 w-28 mb-1" />
+              ) : (
+                <span className="text-xl sm:text-2xl font-extrabold text-emerald-700 truncate block">
+                  {Number(metrics?.totalCollected ?? 0).toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                  })}
+                </span>
+              )}
               <span className="block text-[10px] sm:text-[11px] text-slate-400 mt-0.5 sm:mt-1">
                 Cash & Online Payments
               </span>
@@ -142,14 +151,16 @@ export function ProprietorOverviewView() {
               </div>
             </div>
             <div className="mt-3 sm:mt-4">
-              <span className="text-xl sm:text-2xl font-extrabold text-rose-600 truncate block">
-                {isLoading
-                  ? "..."
-                  : Number(metrics?.totalOutstanding ?? 0).toLocaleString("en-NG", {
-                      style: "currency",
-                      currency: "NGN",
-                    })}
-              </span>
+              {isLoading ? (
+                <Skeleton className="h-7 w-28 mb-1" />
+              ) : (
+                <span className="text-xl sm:text-2xl font-extrabold text-rose-600 truncate block">
+                  {Number(metrics?.totalOutstanding ?? 0).toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                  })}
+                </span>
+              )}
               <span className="block text-[10px] sm:text-[11px] text-slate-400 mt-0.5 sm:mt-1">
                 Uncollected Term Balances
               </span>

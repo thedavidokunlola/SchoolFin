@@ -21,8 +21,19 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 5 * 1000,
-            refetchOnWindowFocus: false,
+            staleTime: 60 * 1000, // 1 minute stale-while-revalidate for instant in-memory rendering
+            cacheTime: 10 * 60 * 1000, // Keep inactive cache alive for 10 minutes (TanStack Query v4)
+            refetchOnWindowFocus: false, // Save bandwidth and avoid repetitive requests
+            refetchOnReconnect: true, // Automatically synchronize when internet reconnects
+            retry: (failureCount, error) => {
+              // Retry up to 2 times for transient network dropouts, but not for 4xx errors
+              if (failureCount < 2) return true;
+              return false;
+            },
+            retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
+          },
+          mutations: {
+            retry: 1, // Auto retry transient network failure once for mutations
           },
         },
       }),
