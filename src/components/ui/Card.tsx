@@ -32,7 +32,7 @@ export function CardHeader({
   return (
     <div
       className={twMerge(
-        clsx("p-6 pb-4 border-b border-slate-100 flex flex-col gap-1.5", className),
+        clsx("p-4 sm:p-6 pb-3 sm:pb-4 border-b border-slate-100 flex flex-col gap-1.5", className),
       )}
       {...props}
     >
@@ -49,7 +49,7 @@ export function CardTitle({
   return (
     <h3
       className={twMerge(
-        clsx("text-lg font-semibold tracking-tight text-slate-900", className),
+        clsx("text-base sm:text-lg font-semibold tracking-tight text-slate-900", className),
       )}
       {...props}
     >
@@ -65,7 +65,7 @@ export function CardDescription({
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
     <p
-      className={twMerge(clsx("text-sm text-slate-500", className))}
+      className={twMerge(clsx("text-xs sm:text-sm text-slate-500", className))}
       {...props}
     >
       {children}
@@ -79,7 +79,7 @@ export function CardContent({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={twMerge(clsx("p-6", className))} {...props}>
+    <div className={twMerge(clsx("p-4 sm:p-6", className))} {...props}>
       {children}
     </div>
   );
@@ -93,7 +93,7 @@ export function CardFooter({
   return (
     <div
       className={twMerge(
-        clsx("p-6 pt-4 border-t border-slate-100 flex items-center justify-between", className),
+        clsx("p-4 sm:p-6 pt-3 sm:pt-4 border-t border-slate-100 flex items-center justify-between", className),
       )}
       {...props}
     >

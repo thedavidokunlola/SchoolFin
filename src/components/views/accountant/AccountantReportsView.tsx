@@ -117,8 +117,8 @@ export function AccountantReportsView() {
 
       {/* Term Selector */}
       <Card className="p-4 shadow-xs">
-        <div className="flex items-center justify-between gap-4">
-          <div className="w-72">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="w-full sm:w-72">
             <label className="text-[11px] font-semibold text-slate-600 block mb-1">
               Select Academic Term
             </label>
@@ -135,7 +135,7 @@ export function AccountantReportsView() {
             </select>
           </div>
 
-          <div className="text-right">
+          <div className="text-left sm:text-right pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
             <span className="text-[10px] font-semibold uppercase text-slate-400 block">
               Session Recovery Rate
             </span>

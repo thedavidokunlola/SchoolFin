@@ -163,7 +163,7 @@ export function ParentInstallmentsView({
           Available Installment Plan Options
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {plans?.map((plan) => {
             const estimatedPartAmount = outstandingNumber / plan.numberOfParts;
             return (

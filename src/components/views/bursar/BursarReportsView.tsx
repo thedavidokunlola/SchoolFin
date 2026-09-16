@@ -237,7 +237,7 @@ export function BursarReportsView() {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-0 overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full min-w-[650px] text-left text-xs">
             <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase text-[10px] tracking-wider">
               <tr>
                 <th className="p-4">Class</th>
