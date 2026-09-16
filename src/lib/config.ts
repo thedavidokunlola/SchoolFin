@@ -45,7 +45,16 @@ export const config = {
     fromEmail: getEnv("RESEND_FROM_EMAIL", "fees@schoolfin.ng"),
     domain: getEnv("RESEND_DOMAIN", "schoolfin.ng"),
   },
+  smtp: {
+    host: process.env.SMTP_HOST || "smtp.gmail.com",
+    port: parseInt(process.env.SMTP_PORT || "587", 10),
+    secure: process.env.SMTP_SECURE === "true",
+    user: process.env.SMTP_USER || "",
+    pass: process.env.SMTP_PASS || "",
+    from: process.env.SMTP_FROM || "SchoolFin Portal <noreply@schoolfin.ng>",
+  },
   proprietorEmail: getEnv("PROPRIETOR_EMAIL", "proprietor@princeofpeaceschool.com"),
   isProduction: process.env.NODE_ENV === "production",
   nodeEnv: process.env.NODE_ENV ?? "development",
 } as const;
+

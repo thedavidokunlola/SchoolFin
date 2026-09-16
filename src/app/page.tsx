@@ -1,9 +1,7 @@
-// src/app/page.tsx
-// Root route: Automatically redirects to role-based dashboard if authenticated, or directly to /login
-
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/server/db/prisma";
 import { ROLE_DASHBOARDS, type UserRole } from "@/lib/constants";
 
 export default async function RootPage() {
@@ -15,5 +13,15 @@ export default async function RootPage() {
     redirect(dashboard);
   }
 
+  // Check if school has been initialized
+  const proprietorCount = await prisma.user.count({
+    where: { role: "PROPRIETOR" },
+  });
+
+  if (proprietorCount === 0) {
+    redirect("/setup");
+  }
+
   redirect("/login");
 }
+

@@ -183,3 +183,183 @@ export async function acceptParentInvite(
 
   return { success: true, email: updatedUser.email };
 }
+
+export interface InitializeSchoolInput {
+  adminFirstName: string;
+  adminLastName: string;
+  adminEmail: string;
+  adminPosition?: string;
+  adminPassword: string;
+  adminPhone?: string;
+  otpCode?: string;
+  termName?: string;
+  termStartDate?: Date;
+  termEndDate?: Date;
+  paymentDueDate?: Date;
+}
+
+export async function getSchoolSetupStatus(): Promise<{
+  isSetupComplete: boolean;
+  adminCount: number;
+}> {
+  const adminCount = await prisma.user.count({
+    where: { role: "PROPRIETOR" },
+  });
+
+  return {
+    isSetupComplete: adminCount > 0,
+    adminCount,
+  };
+}
+
+export async function sendSetupOtp(
+  emailInput: string,
+  adminName: string,
+): Promise<{ success: boolean; message: string }> {
+  const email = emailInput.toLowerCase().trim();
+
+  // Check if school is already initialized
+  const existingProprietor = await prisma.user.findFirst({
+    where: { role: "PROPRIETOR" },
+  });
+
+  if (existingProprietor) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "School portal is already initialized. Please sign in.",
+    });
+  }
+
+  // Generate secure 6-digit numeric OTP
+  const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+  const redisKey = `setup_otp:${email}`;
+
+  // Store in redis with 10-minute expiration (600 seconds)
+  await redis.set(redisKey, otpCode, "EX", 600);
+
+  // Dispatch email via Nodemailer
+  const { sendSetupOtpEmail } = await import("@/server/services/mailer");
+  await sendSetupOtpEmail({
+    toEmail: email,
+    adminName,
+    otpCode,
+  });
+
+  return {
+    success: true,
+    message: "A 6-digit verification code has been sent to your email address.",
+  };
+}
+
+export async function initializeSchool(
+  input: InitializeSchoolInput,
+): Promise<{ success: boolean; email: string }> {
+  const existingProprietor = await prisma.user.findFirst({
+    where: { role: "PROPRIETOR" },
+  });
+
+  if (existingProprietor) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "School is already initialized. Please sign in to your proprietor account.",
+    });
+  }
+
+  const email = input.adminEmail.toLowerCase().trim();
+
+  // If OTP code provided, verify it against Redis
+  if (input.otpCode) {
+    const redisKey = `setup_otp:${email}`;
+    const storedOtp = await redis.get(redisKey);
+
+    if (!storedOtp || storedOtp !== input.otpCode.trim()) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Invalid or expired 6-digit verification code. Please check your email or request a new code.",
+      });
+    }
+
+    // Single use: delete OTP after successful verification
+    await redis.del(redisKey);
+  }
+
+  const existingEmail = await prisma.user.findUnique({ where: { email } });
+
+  if (existingEmail) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "An account with this email address already exists.",
+    });
+  }
+
+  if (!input.adminPassword || input.adminPassword.length < 8) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Administrator password must be at least 8 characters long.",
+    });
+  }
+
+  const hashedPassword = await bcrypt.hash(input.adminPassword, 12);
+  
+  // Encrypt phone with AES-256 if provided per Rule SEC-1
+  const { encrypt } = await import("@/server/services/encryption");
+  const encryptedPhone = input.adminPhone?.trim()
+    ? encrypt(input.adminPhone.trim())
+    : null;
+
+  const now = new Date();
+  const defaultStartDate = input.termStartDate ?? new Date(now.getFullYear(), 8, 1); // Sept 1st
+  const defaultEndDate = input.termEndDate ?? new Date(now.getFullYear(), 11, 20); // Dec 20th
+  const defaultDueDate = input.paymentDueDate ?? new Date(now.getFullYear(), 9, 15); // Oct 15th
+  const defaultTermName = input.termName?.trim() || "First Term";
+
+  const user = await prisma.$transaction(async (tx) => {
+    // 1. Create master PROPRIETOR account
+    const adminUser = await tx.user.create({
+      data: {
+        email,
+        firstName: input.adminFirstName.trim(),
+        lastName: input.adminLastName.trim(),
+        role: "PROPRIETOR",
+        hashedPassword,
+        phone: encryptedPhone,
+        isActive: true,
+      },
+    });
+
+    // 2. Create initial active Academic Term
+    await tx.academicTerm.create({
+      data: {
+        name: defaultTermName,
+        startDate: defaultStartDate,
+        endDate: defaultEndDate,
+        paymentDueDate: defaultDueDate,
+        isActive: true,
+      },
+    });
+
+    // 3. Log initial setup in audit log
+    await writeAuditLog(
+      {
+        userId: adminUser.id,
+        action: AUDIT_ACTIONS.USER_CREATED,
+        entity: "User",
+        entityId: adminUser.id,
+        metadata: {
+          event: "SCHOOL_INITIALIZED",
+          email: adminUser.email,
+          officePosition: input.adminPosition || "Proprietor",
+          role: "PROPRIETOR",
+        },
+        isSensitive: true,
+      },
+      tx,
+    );
+
+    return adminUser;
+  });
+
+  return { success: true, email: user.email };
+}
+
+

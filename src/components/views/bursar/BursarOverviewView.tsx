@@ -3,13 +3,11 @@
 // src/components/views/bursar/BursarOverviewView.tsx
 // Operational Bursar Command Centre with live financial metrics, collection progress, and activity feeds
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { trpc } from "@/lib/trpc/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { SchoolOnboardingModal } from "@/components/common/SchoolOnboardingModal";
 import {
   Users,
   CreditCard,
@@ -20,7 +18,6 @@ import {
   ArrowRight,
   ShieldCheck,
   GraduationCap,
-  Sparkles,
   X,
 } from "lucide-react";
 
@@ -29,17 +26,6 @@ export interface BursarOverviewViewProps {
 }
 
 export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
-  const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const shown = localStorage.getItem("schoolfin_onboarding_shown") === "true";
-      if (!shown) {
-        setIsOnboardingModalOpen(true);
-      }
-    }
-  }, []);
-
   const { data: metrics, isLoading: isLoadingMetrics } = trpc.dashboard.getMetrics.useQuery();
   const { data: terms } = trpc.terms.getAll.useQuery();
   const activeTerm = terms?.find((t) => t.isActive);
@@ -56,13 +42,6 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Onboarding Interactive Modal - First thing to see on login */}
-      <SchoolOnboardingModal
-        isOpen={isOnboardingModalOpen}
-        onClose={() => setIsOnboardingModalOpen(false)}
-        onNavigate={onNavigate}
-      />
-
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
         <div>
@@ -92,16 +71,6 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setIsOnboardingModalOpen(true)}
-            className="text-xs gap-1.5 text-[#2B35AF] border-indigo-200 hover:bg-indigo-50 shadow-2xs"
-          >
-            <Sparkles className="w-3.5 h-3.5" /> Setup Guide
-          </Button>
-
           <Badge variant={activeTerm ? "success" : "warning"} className="px-3 py-1 font-semibold text-xs">
             {activeTerm ? "Active Academic Term" : "Term Inactive"}
           </Badge>

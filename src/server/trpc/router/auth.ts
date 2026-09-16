@@ -9,6 +9,9 @@ import {
   resetPassword,
   createParentInvite,
   acceptParentInvite,
+  getSchoolSetupStatus,
+  sendSetupOtp,
+  initializeSchool,
 } from "@/server/services/auth";
 import {
   updateUserProfile,
@@ -18,6 +21,41 @@ import {
 import { decrypt } from "@/server/services/encryption";
 
 export const authRouter = router({
+  getSetupStatus: publicProcedure.query(async () => {
+    return await getSchoolSetupStatus();
+  }),
+
+  sendSetupOtp: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email("Invalid email address"),
+        adminName: z.string().min(1, "Name is required"),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await sendSetupOtp(input.email, input.adminName);
+    }),
+
+  initializeSchool: publicProcedure
+    .input(
+      z.object({
+        adminFirstName: z.string().min(1, "First name is required"),
+        adminLastName: z.string().min(1, "Last name is required"),
+        adminEmail: z.string().email("Invalid email address"),
+        adminPosition: z.string().optional(),
+        adminPassword: z.string().min(8, "Password must be at least 8 characters"),
+        adminPhone: z.string().optional(),
+        otpCode: z.string().min(6, "6-digit verification code is required"),
+        termName: z.string().optional(),
+        termStartDate: z.date().optional(),
+        termEndDate: z.date().optional(),
+        paymentDueDate: z.date().optional(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await initializeSchool(input);
+    }),
+
   me: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },

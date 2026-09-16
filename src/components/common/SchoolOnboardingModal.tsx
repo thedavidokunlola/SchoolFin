@@ -1,7 +1,7 @@
 "use client";
 
 // src/components/common/SchoolOnboardingModal.tsx
-// 3-Card Guided School Onboarding Modal for fresh deployments and new administrators
+// Compact 3-Step Guided School Onboarding Modal - Non-scrollable with concise copy
 
 import React, { useState } from "react";
 import { Modal } from "@/components/ui/Modal";
@@ -15,7 +15,6 @@ import {
   ArrowLeft,
   CheckCircle2,
   Sparkles,
-  ShieldCheck,
 } from "lucide-react";
 
 export interface SchoolOnboardingModalProps {
@@ -35,52 +34,43 @@ export function SchoolOnboardingModal({
     {
       id: "term",
       number: "1",
-      badge: "Step 1 of 3 • Foundation",
-      title: "Academic Term & Billing Calendar",
+      badge: "Step 1 of 3",
+      title: "Active Academic Term",
       description:
-        "Every financial ledger, fee schedule, and debt collection scan in SchoolFin is anchored to an active academic term with a clear payment due date.",
-      highlight: "Active Session Configured",
-      actionText: "Manage Terms",
+        "All fees, payments, and reminders are tied to your current academic term and payment deadline.",
       tabKey: "terms",
-      icon: <Calendar className="w-8 h-8 text-[#2B35AF]" />,
+      icon: <Calendar className="w-6 h-6 text-[#2B35AF]" />,
       bullets: [
-        "Defines the term start and closing dates",
-        "Sets the anchor deadline for payment reminders",
-        "Maintains audit separation across school years",
+        "Sets the current term start and end dates",
+        "Anchors fee deadlines and automated reminders",
       ],
     },
     {
       id: "students",
       number: "2",
-      badge: "Step 2 of 3 • Roster",
-      title: "Student Enrollment & Parent Linking",
+      badge: "Step 2 of 3",
+      title: "Students & Parents",
       description:
-        "Enroll students with their official admission numbers and link parent accounts so parents can securely log in, view statements, and pay online.",
-      highlight: "Enrolling Your First Batch",
-      actionText: "Go to Students Roster",
+        "Enroll students and link parent accounts so families can check statements and pay fees online.",
       tabKey: "students",
-      icon: <GraduationCap className="w-8 h-8 text-emerald-600" />,
+      icon: <GraduationCap className="w-6 h-6 text-emerald-600" />,
       bullets: [
-        "Admission number is the unique ledger key",
-        "Parents get private portal access for their children",
-        "Supports credit surplus balances automatically",
+        "Tracks student balances by admission number",
+        "Gives parents access to view receipts and balances",
       ],
     },
     {
       id: "fees",
       number: "3",
-      badge: "Step 3 of 3 • Invoicing",
-      title: "Class Fee Structures & Bulk Invoicing",
+      badge: "Step 3 of 3",
+      title: "Fee Structures & Invoicing",
       description:
-        "Configure itemised fee structures (Tuition, ICT, Development Levy) per class, then post them to entire classes in one click with built-in duplicate protection.",
-      highlight: "Ready to Post Invoices",
-      actionText: "Configure Fee Structures",
+        "Set up fee breakdowns by class and post invoices in one click with built-in duplicate prevention.",
       tabKey: "fees",
-      icon: <FileSpreadsheet className="w-8 h-8 text-indigo-600" />,
+      icon: <FileSpreadsheet className="w-6 h-6 text-indigo-600" />,
       bullets: [
-        "Itemised line items with full transparency",
-        "1-click bulk posting to all students in a class",
-        "Enforces strict anti-duplicate billing rules",
+        "Transparent, itemized class fee breakdowns",
+        "1-click bulk invoice posting for entire classes",
       ],
     },
   ];
@@ -108,71 +98,63 @@ export function SchoolOnboardingModal({
     onClose();
   };
 
-  const handleDirectAction = (tabKey: string) => {
-    handleComplete();
-    if (onNavigate) {
-      onNavigate(tabKey);
-    }
-  };
-
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      maxWidth="xl"
+      maxWidth="lg"
       title="Welcome to SchoolFin"
-      description="Quick 3-step setup guide for your school finance and fee management portal"
+      description="Quick 3-step guide to help you get started"
     >
-      <div className="space-y-6 pt-1">
+      <div className="space-y-4">
         {/* Step Progress Dots */}
-        <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-4">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
+          <div className="flex items-center gap-1.5">
             {steps.map((s, idx) => (
               <button
                 key={s.id}
                 type="button"
                 onClick={() => setCurrentStep(idx)}
-                className={`h-2.5 rounded-full transition-all cursor-pointer ${
+                className={`h-2 rounded-full transition-all cursor-pointer ${
                   idx === currentStep
-                    ? "w-8 bg-[#2B35AF]"
+                    ? "w-7 bg-[#2B35AF]"
                     : idx < currentStep
-                    ? "w-4 bg-emerald-500"
-                    : "w-4 bg-slate-200"
+                    ? "w-3.5 bg-emerald-500"
+                    : "w-3.5 bg-slate-200"
                 }`}
                 title={`Step ${idx + 1}`}
               />
             ))}
           </div>
-          <span className="text-xs font-bold text-slate-500">
-            Card {currentStep + 1} of {steps.length}
+          <span className="text-[11px] font-bold text-slate-400">
+            Step {currentStep + 1} of {steps.length}
           </span>
         </div>
 
-        {/* Active Step Card Content */}
-        <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-slate-50/70 to-white p-6 sm:p-7 shadow-xs space-y-4 animate-in fade-in zoom-in-95 duration-200">
-          <div className="flex items-start justify-between gap-4">
-            <div className="p-3.5 bg-white border border-slate-200/80 rounded-2xl shadow-xs shrink-0">
-              {activeStep.icon}
+        {/* Active Step Card Content (Compact, Non-scrollable) */}
+        <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4 sm:p-5 space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-white border border-slate-200/90 rounded-xl shadow-2xs shrink-0">
+                {activeStep.icon}
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 leading-tight">
+                  {activeStep.title}
+                </h3>
+                <Badge variant="brand" className="text-[9px] font-bold uppercase tracking-wider mt-0.5">
+                  {activeStep.badge}
+                </Badge>
+              </div>
             </div>
-            <Badge variant="brand" className="text-[10px] font-bold uppercase tracking-wider">
-              {activeStep.badge}
-            </Badge>
           </div>
 
-          <div>
-            <h3 className="text-lg sm:text-xl font-black tracking-tight text-slate-900">
-              {activeStep.title}
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">
-              {activeStep.description}
-            </p>
-          </div>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            {activeStep.description}
+          </p>
 
-          <div className="p-4 bg-white/80 border border-slate-200/60 rounded-xl space-y-2">
-            <span className="text-[11px] font-bold text-slate-800 uppercase tracking-wider block">
-              Key Capabilities:
-            </span>
-            <ul className="space-y-1.5 text-xs text-slate-600">
+          <div className="p-3 bg-white border border-slate-200/70 rounded-lg space-y-1.5">
+            <ul className="space-y-1 text-xs text-slate-600">
               {activeStep.bullets.map((b) => (
                 <li key={b} className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
@@ -184,23 +166,23 @@ export function SchoolOnboardingModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+        <div className="flex items-center justify-between gap-3 pt-1">
           <button
             type="button"
             onClick={handleComplete}
-            className="text-xs text-slate-500 hover:text-slate-800 font-semibold cursor-pointer underline-offset-4 hover:underline"
+            className="text-xs text-slate-400 hover:text-slate-700 font-medium cursor-pointer"
           >
-            Skip & Proceed to Dashboard
+            Skip for now
           </button>
 
-          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+          <div className="flex items-center gap-2">
             {currentStep > 0 && (
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={handlePrev}
-                className="gap-1.5 text-xs"
+                className="gap-1 text-xs py-1.5 px-3 rounded-lg"
               >
                 <ArrowLeft className="w-3.5 h-3.5" /> Back
               </Button>
@@ -212,9 +194,9 @@ export function SchoolOnboardingModal({
                 variant="accent"
                 size="sm"
                 onClick={handleNext}
-                className="gap-1.5 text-xs bg-[#2B35AF] hover:bg-[#1E257A] text-white shadow-xs font-bold"
+                className="gap-1.5 text-xs py-1.5 px-3.5 bg-[#2B35AF] hover:bg-[#1E257A] text-white font-bold rounded-lg cursor-pointer"
               >
-                Next Step <ArrowRight className="w-3.5 h-3.5" />
+                Next <ArrowRight className="w-3.5 h-3.5" />
               </Button>
             ) : (
               <Button
@@ -222,9 +204,9 @@ export function SchoolOnboardingModal({
                 variant="accent"
                 size="sm"
                 onClick={handleComplete}
-                className="gap-2 text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs font-bold"
+                className="gap-1.5 text-xs py-1.5 px-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg cursor-pointer"
               >
-                <Sparkles className="w-4 h-4" /> Finish & Open Dashboard
+                <Sparkles className="w-3.5 h-3.5" /> Go to Dashboard
               </Button>
             )}
           </div>

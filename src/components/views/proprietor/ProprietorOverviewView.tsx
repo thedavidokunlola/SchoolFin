@@ -3,13 +3,11 @@
 // src/components/views/proprietor/ProprietorOverviewView.tsx
 // Proprietor Overview component with financial KPI metrics and recent transactions
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { trpc } from "@/lib/trpc/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { SchoolOnboardingModal } from "@/components/common/SchoolOnboardingModal";
 import {
   Users,
   CreditCard,
@@ -17,21 +15,9 @@ import {
   AlertCircle,
   TrendingUp,
   Receipt,
-  Sparkles,
 } from "lucide-react";
 
 export function ProprietorOverviewView() {
-  const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const shown = localStorage.getItem("schoolfin_onboarding_shown") === "true";
-      if (!shown) {
-        setIsOnboardingModalOpen(true);
-      }
-    }
-  }, []);
-
   const { data: metrics, isLoading } = trpc.dashboard.getMetrics.useQuery();
   const { data: terms } = trpc.terms.getAll.useQuery();
 
@@ -39,12 +25,6 @@ export function ProprietorOverviewView() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
-      {/* Onboarding Interactive Modal */}
-      <SchoolOnboardingModal
-        isOpen={isOnboardingModalOpen}
-        onClose={() => setIsOnboardingModalOpen(false)}
-      />
-
       {/* Top Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -70,16 +50,6 @@ export function ProprietorOverviewView() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setIsOnboardingModalOpen(true)}
-            className="text-xs gap-1.5 text-[#2B35AF] border-indigo-200 hover:bg-indigo-50 shadow-2xs"
-          >
-            <Sparkles className="w-3.5 h-3.5" /> Setup Guide
-          </Button>
-
           <Badge variant={activeTerm ? "success" : "warning"} className="px-3 py-1">
             {activeTerm ? "Academic Session Active" : "Term Setup Required"}
           </Badge>

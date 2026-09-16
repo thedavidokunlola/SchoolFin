@@ -1,13 +1,12 @@
-// prisma/seed.ts
-// Clean database reset for SchoolFin
-// Ensures the database starts completely fresh with 0 accounts so the school can onboard via /setup.
+// scripts/clean-database.ts
+// Wipes all data to give a 100% fresh, empty database for real school onboarding
 
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function main() {
-  console.log("🧹 Resetting SchoolFin database to a 100% clean, fresh state...");
+async function clean() {
+  console.log("🧹 Wiping all old data from database...");
 
   await prisma.auditLog.deleteMany();
   await prisma.studentNote.deleteMany();
@@ -29,16 +28,10 @@ async function main() {
   await prisma.user.deleteMany();
 
   const userCount = await prisma.user.count();
-  console.log(`✨ Database reset complete (Total Users: ${userCount}).`);
-  console.log("🚀 Start the dev server and visit http://localhost:3000 to set up your school portal via /setup.");
+  console.log(`✅ Database is now 100% fresh and clean (Total Users: ${userCount}).`);
+  console.log("🚀 Visiting http://localhost:3000 will now start directly on Create Portal (/setup).");
 }
 
-main()
-  .catch((e) => {
-    console.error("❌ Reset failed:", e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
-
+clean()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect());
