@@ -9,6 +9,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { SCHOOL_CLASSES } from "@/lib/constants";
+import { TableRowSkeleton } from "@/components/ui/Skeleton";
+import { EmptyState } from "@/components/ui/EmptyState";
 import {
   Download,
   MessageSquare,
@@ -150,7 +152,7 @@ export function BursarReportsView() {
               Select Academic Term
             </label>
             <select
-              className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600"
+              className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               value={termIdToQuery || ""}
               onChange={(e) => setSelectedTermId(e.target.value)}
             >
@@ -167,7 +169,7 @@ export function BursarReportsView() {
               Filter by Class (Optional)
             </label>
             <select
-              className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600"
+              className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
             >
@@ -249,15 +251,21 @@ export function BursarReportsView() {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {isReportLoading ? (
+                <>
+                  <TableRowSkeleton columns={5} />
+                  <TableRowSkeleton columns={5} />
+                  <TableRowSkeleton columns={5} />
+                  <TableRowSkeleton columns={5} />
+                </>
+              ) : !report?.classBreakdowns || report.classBreakdowns.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-slate-400">
-                    Loading financial report...
-                  </td>
-                </tr>
-              ) : report?.classBreakdowns.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="p-8 text-center text-slate-400">
-                    No posted fee structures for this academic term.
+                  <td colSpan={5} className="p-6">
+                    <EmptyState
+                      icon={<FileSpreadsheet className="w-6 h-6" />}
+                      title="No Financial Records for this Term"
+                      description="No fee postings or transactions have been recorded for the selected academic term yet."
+                      compact
+                    />
                   </td>
                 </tr>
               ) : (

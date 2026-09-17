@@ -10,7 +10,8 @@ import { trpc } from "@/lib/trpc/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { GraduationCap, ArrowRight } from "lucide-react";
+import { CardGridSkeleton } from "@/components/ui/Skeleton";
+import { GraduationCap, ArrowRight, ShieldCheck } from "lucide-react";
 
 export interface ParentOverviewViewProps {
   onSelectStudent?: (studentId: string) => void;
@@ -29,25 +30,28 @@ export function ParentOverviewView({ onSelectStudent }: ParentOverviewViewProps)
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+      {/* Header Banner */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
+        <h1 className="text-xl md:text-2xl font-extrabold tracking-tight text-slate-900">
           Welcome, {session?.user?.firstName || "Parent"}
         </h1>
-        <p className="text-xs text-slate-500 mt-0.5">
+        <p className="text-xs text-slate-500 mt-1">
           Consolidated family portal. View fee cards, outstanding balances, and official receipts.
         </p>
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
-          Your Children ({linkedStudents.length})
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+            Your Children ({linkedStudents.length})
+          </h2>
+        </div>
 
         {isLoading ? (
-          <div className="p-12 text-center text-xs text-slate-400">
-            Loading family profiles...
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <CardGridSkeleton count={2} />
           </div>
-        ) : linkedStudents.length === 0 ? (
+        ) : !linkedStudents || linkedStudents.length === 0 ? (
           <EmptyState
             icon={<GraduationCap className="w-6 h-6" />}
             title="No Children Linked Yet"
@@ -56,10 +60,10 @@ export function ParentOverviewView({ onSelectStudent }: ParentOverviewViewProps)
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {linkedStudents.map((student) => (
-              <Card key={student.id} className="p-6 hover:shadow-xs transition-all shadow-xs">
+              <Card key={student.id} className="p-6 rounded-2xl border-slate-200/80 hover:border-slate-300 transition-all shadow-2xs">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-[#12151E] text-white flex items-center justify-center font-black text-base shadow-xs border border-slate-800">
                       {student.firstName[0]}
                       {student.lastName[0]}
                     </div>
@@ -67,9 +71,9 @@ export function ParentOverviewView({ onSelectStudent }: ParentOverviewViewProps)
                       <h3 className="font-bold text-base text-slate-900">
                         {student.firstName} {student.lastName}
                       </h3>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-500 mt-0.5">
                         Class: <strong>{student.class}</strong> • Admission:{" "}
-                        <span className="font-mono">{student.admissionNumber}</span>
+                        <span className="font-mono font-medium text-slate-700">{student.admissionNumber}</span>
                       </p>
                     </div>
                   </div>
@@ -77,10 +81,10 @@ export function ParentOverviewView({ onSelectStudent }: ParentOverviewViewProps)
 
                 <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase tracking-wider block">
+                    <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">
                       Credit Surplus
                     </span>
-                    <span className="text-xs font-bold text-slate-700">
+                    <span className="text-xs font-bold text-emerald-700">
                       {Number(student.creditBalance).toLocaleString("en-NG", {
                         style: "currency",
                         currency: "NGN",
@@ -92,7 +96,7 @@ export function ParentOverviewView({ onSelectStudent }: ParentOverviewViewProps)
                     href={`/parent/students/${student.id}`}
                     onClick={(e) => handleSelect(student.id, e)}
                   >
-                    <Button variant="accent" size="sm" className="gap-1.5 text-xs shadow-xs">
+                    <Button variant="accent" size="sm" className="gap-1.5 text-xs shadow-xs rounded-xl">
                       View Statement <ArrowRight className="w-3.5 h-3.5" />
                     </Button>
                   </Link>
@@ -105,3 +109,4 @@ export function ParentOverviewView({ onSelectStudent }: ParentOverviewViewProps)
     </div>
   );
 }
+

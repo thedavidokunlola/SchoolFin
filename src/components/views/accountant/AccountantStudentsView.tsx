@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { TableRowSkeleton } from "@/components/ui/Skeleton";
 import { SCHOOL_CLASSES } from "@/lib/constants";
 import { Search, ChevronRight, GraduationCap } from "lucide-react";
 
@@ -44,14 +45,14 @@ export function AccountantStudentsView() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by student name or admission number..."
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 shadow-2xs"
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 shadow-2xs"
           />
         </div>
 
         <select
           value={selectedClass}
           onChange={(e) => setSelectedClass(e.target.value)}
-          className="px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+          className="px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
         >
           <option value="">All Classes</option>
           {SCHOOL_CLASSES.map((c) => (
@@ -64,7 +65,7 @@ export function AccountantStudentsView() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "inactive")}
-          className="px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+          className="px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
         >
           <option value="all">All Statuses (Active & Inactive)</option>
           <option value="active">Active (Enrolled)</option>
@@ -88,12 +89,13 @@ export function AccountantStudentsView() {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {isLoading ? (
-                <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-400">
-                    Loading ledgers...
-                  </td>
-                </tr>
-              ) : data?.students.length === 0 ? (
+                <>
+                  <TableRowSkeleton columns={6} />
+                  <TableRowSkeleton columns={6} />
+                  <TableRowSkeleton columns={6} />
+                  <TableRowSkeleton columns={6} />
+                </>
+              ) : !data?.students || data.students.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="p-6">
                     {search || selectedClass || statusFilter !== "all" ? (

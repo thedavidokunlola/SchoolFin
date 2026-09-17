@@ -7,6 +7,7 @@ import { trpc } from "@/lib/trpc/client";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { StatCardSkeleton, Skeleton } from "@/components/ui/Skeleton";
 import { ArrowLeft, CreditCard, Calendar, CheckCircle2, RefreshCw, X } from "lucide-react";
 
 export interface ParentStatementViewProps {
@@ -68,8 +69,13 @@ export function ParentStatementView({
 
   if (isLoading) {
     return (
-      <div className="p-12 text-center text-xs text-slate-400">
-        Loading student financial records...
+      <div className="space-y-6 max-w-5xl mx-auto animate-pulse">
+        <Skeleton className="h-8 w-48 rounded-lg" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <StatCardSkeleton />
+          <StatCardSkeleton />
+        </div>
+        <Skeleton className="h-48 w-full rounded-2xl" />
       </div>
     );
   }

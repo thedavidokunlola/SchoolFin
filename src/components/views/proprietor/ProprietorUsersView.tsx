@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { TableRowSkeleton } from "@/components/ui/Skeleton";
 import { UserPlus, Users } from "lucide-react";
 
 export function ProprietorUsersView() {
@@ -72,14 +73,16 @@ export function ProprietorUsersView() {
             Create and manage Bursar, Accountant, and Proprietor users
           </p>
         </div>
-        <Button
-          variant="accent"
-          size="sm"
-          onClick={() => setIsCreateModalOpen(true)}
-          className="w-full sm:w-auto gap-2 shadow-xs"
-        >
-          <UserPlus className="w-4 h-4" /> Add Staff Account
-        </Button>
+        {(staff?.length ?? 0) > 0 && (
+          <Button
+            variant="accent"
+            size="sm"
+            onClick={() => setIsCreateModalOpen(true)}
+            className="w-full sm:w-auto gap-2 shadow-xs"
+          >
+            <UserPlus className="w-4 h-4" /> Add Staff Account
+          </Button>
+        )}
       </div>
 
       {/* Staff Table */}
@@ -98,12 +101,12 @@ export function ProprietorUsersView() {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {isLoading ? (
-                <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-400">
-                    Loading staff accounts...
-                  </td>
-                </tr>
-              ) : staff?.length === 0 ? (
+                <>
+                  <TableRowSkeleton columns={6} />
+                  <TableRowSkeleton columns={6} />
+                  <TableRowSkeleton columns={6} />
+                </>
+              ) : !staff || staff.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="p-4">
                     <EmptyState
@@ -213,7 +216,7 @@ export function ProprietorUsersView() {
               onChange={(e) =>
                 setRole(e.target.value as "BURSAR" | "ACCOUNTANT" | "PROPRIETOR")
               }
-              className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+              className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
             >
               <option value="BURSAR">Bursar (Full Cash & Posting Operations)</option>
               <option value="ACCOUNTANT">Accountant (Read-Only & Financial Reports)</option>

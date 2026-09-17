@@ -10,7 +10,9 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
-import { Plus } from "lucide-react";
+import { TableRowSkeleton } from "@/components/ui/Skeleton";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Plus, CreditCard } from "lucide-react";
 
 export function BursarInstallmentsView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,14 +60,16 @@ export function BursarInstallmentsView() {
           </p>
         </div>
 
-        <Button
-          variant="accent"
-          size="md"
-          onClick={() => setIsModalOpen(true)}
-          className="gap-2 shadow-xs"
-        >
-          <Plus className="w-4 h-4" /> Create Installment Plan Template
-        </Button>
+        {(plans?.length ?? 0) > 0 && (
+          <Button
+            variant="accent"
+            size="md"
+            onClick={() => setIsModalOpen(true)}
+            className="gap-2 shadow-xs"
+          >
+            <Plus className="w-4 h-4" /> Create Installment Plan Template
+          </Button>
+        )}
       </div>
 
       {/* Plans Table */}
@@ -88,15 +92,22 @@ export function BursarInstallmentsView() {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {isLoading ? (
+                <>
+                  <TableRowSkeleton columns={4} />
+                  <TableRowSkeleton columns={4} />
+                  <TableRowSkeleton columns={4} />
+                </>
+              ) : !plans || plans.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="p-8 text-center text-slate-400">
-                    Loading plans...
-                  </td>
-                </tr>
-              ) : plans?.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="p-8 text-center text-slate-400">
-                    No installment plan templates configured yet.
+                  <td colSpan={4} className="p-6">
+                    <EmptyState
+                      icon={<CreditCard className="w-6 h-6" />}
+                      title="No Installment Plan Presets"
+                      description="Create presets (e.g. 2-Part or 3-Part Installment Schedules) to give parents flexible installment checkout options."
+                      actionLabel="Create First Plan"
+                      onAction={() => setIsModalOpen(true)}
+                      compact
+                    />
                   </td>
                 </tr>
               ) : (

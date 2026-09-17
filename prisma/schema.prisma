@@ -83,6 +83,7 @@ model Student {
   admissionNumber String   @unique
   firstName       String
   lastName        String
+  gender          String?  // "MALE" | "FEMALE"
   class           String
   photoUrl        String?
   isActive        Boolean  @default(true)

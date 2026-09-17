@@ -395,7 +395,7 @@ export default function BursarStudentProfilePage() {
                 value={noteContent}
                 onChange={(e) => setNoteContent(e.target.value)}
                 placeholder="e.g. Parent promised payment of remaining balance by next Friday..."
-                className="w-full p-3 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900"
+                className="w-full p-3 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               />
             </div>
 

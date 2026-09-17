@@ -348,7 +348,7 @@ export default function SchoolSetupPage() {
                     required
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-[#1E257A] focus:ring-2 focus:ring-[#1E257A]/10 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all"
                   />
                 </div>
                 <div className="space-y-1">
@@ -358,7 +358,7 @@ export default function SchoolSetupPage() {
                     required
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-[#1E257A] focus:ring-2 focus:ring-[#1E257A]/10 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -370,7 +370,7 @@ export default function SchoolSetupPage() {
                   <select
                     value={officePosition}
                     onChange={(e) => setOfficePosition(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-[#1E257A] focus:ring-2 focus:ring-[#1E257A]/10 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all cursor-pointer"
+                    className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all cursor-pointer"
                   >
                     {OFFICE_POSITIONS.map((pos) => (
                       <option key={pos} value={pos}>
@@ -404,7 +404,7 @@ export default function SchoolSetupPage() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-[#1E257A] focus:ring-2 focus:ring-[#1E257A]/10 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all"
+                      className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -417,7 +417,7 @@ export default function SchoolSetupPage() {
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-[#1E257A] focus:ring-2 focus:ring-[#1E257A]/10 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all"
+                      className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -433,7 +433,7 @@ export default function SchoolSetupPage() {
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full pl-9 pr-9 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-[#1E257A] focus:ring-2 focus:ring-[#1E257A]/10 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all"
+                      className="w-full pl-9 pr-9 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all"
                     />
                     <button
                       type="button"
@@ -454,7 +454,7 @@ export default function SchoolSetupPage() {
                       required
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-[#1E257A] focus:ring-2 focus:ring-[#1E257A]/10 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all"
+                      className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-xl text-xs sm:text-sm text-slate-900 outline-none transition-all"
                     />
                   </div>
                 </div>

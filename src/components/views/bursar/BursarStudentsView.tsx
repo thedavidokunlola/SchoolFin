@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
 import { SCHOOL_CLASSES } from "@/lib/constants";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { TableRowSkeleton } from "@/components/ui/Skeleton";
 import {
   Search,
   UserPlus,
@@ -31,6 +32,7 @@ interface StudentListItem {
   admissionNumber: string;
   firstName: string;
   lastName: string;
+  gender?: string | null;
   class: string;
   isActive: boolean;
   parentLinks?: {
@@ -58,6 +60,7 @@ export function BursarStudentsView() {
   const [admissionNumber, setAdmissionNumber] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [gender, setGender] = useState<"MALE" | "FEMALE" | "">("");
   const [studentClass, setStudentClass] = useState<string>(SCHOOL_CLASSES[0]);
   const [studentFormError, setStudentFormError] = useState<string | null>(null);
 
@@ -66,6 +69,7 @@ export function BursarStudentsView() {
   const [editAdmissionNumber, setEditAdmissionNumber] = useState("");
   const [editFirstName, setEditFirstName] = useState("");
   const [editLastName, setEditLastName] = useState("");
+  const [editGender, setEditGender] = useState<"MALE" | "FEMALE" | "">("");
   const [editClass, setEditClass] = useState("");
   const [editIsActive, setEditIsActive] = useState(true);
   const [editFormError, setEditFormError] = useState<string | null>(null);
@@ -98,6 +102,7 @@ export function BursarStudentsView() {
       setAdmissionNumber("");
       setFirstName("");
       setLastName("");
+      setGender("");
       setStudentClass(SCHOOL_CLASSES[0]);
       setStudentFormError(null);
     },
@@ -154,6 +159,7 @@ export function BursarStudentsView() {
       admissionNumber,
       firstName,
       lastName,
+      gender: gender ? gender : undefined,
       class: studentClass,
     });
   };
@@ -163,6 +169,7 @@ export function BursarStudentsView() {
     setEditAdmissionNumber(student.admissionNumber);
     setEditFirstName(student.firstName);
     setEditLastName(student.lastName);
+    setEditGender((student.gender as "MALE" | "FEMALE") || "");
     setEditClass(student.class);
     setEditIsActive(student.isActive);
     setEditFormError(null);
@@ -177,6 +184,7 @@ export function BursarStudentsView() {
       admissionNumber: editAdmissionNumber,
       firstName: editFirstName,
       lastName: editLastName,
+      gender: editGender ? editGender : undefined,
       class: editClass,
       isActive: editIsActive,
     });
@@ -216,14 +224,16 @@ export function BursarStudentsView() {
             Manage student registrations, profile details, parent links, and ledger histories
           </p>
         </div>
-        <Button
-          variant="accent"
-          size="sm"
-          onClick={() => setIsCreateStudentOpen(true)}
-          className="w-full sm:w-auto gap-2 shadow-xs"
-        >
-          <UserPlus className="w-4 h-4" /> Enroll Student
-        </Button>
+        {((data?.students?.length ?? 0) > 0 || Boolean(search || selectedClass || statusFilter !== "all")) && (
+          <Button
+            variant="accent"
+            size="sm"
+            onClick={() => setIsCreateStudentOpen(true)}
+            className="w-full sm:w-auto gap-2 shadow-xs"
+          >
+            <UserPlus className="w-4 h-4" /> Enroll Student
+          </Button>
+        )}
       </div>
 
       {/* Filter and Search */}
@@ -235,14 +245,14 @@ export function BursarStudentsView() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by student name or admission number..."
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 hover:border-slate-400 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 shadow-2xs transition-all"
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 hover:border-slate-400 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 shadow-2xs transition-all"
           />
         </div>
 
         <select
           value={selectedClass}
           onChange={(e) => setSelectedClass(e.target.value)}
-          className="px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+          className="px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
         >
           <option value="">All Classes</option>
           {SCHOOL_CLASSES.map((c) => (
@@ -255,7 +265,7 @@ export function BursarStudentsView() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "inactive")}
-          className="px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+          className="px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
         >
           <option value="all">All Statuses (Active & Inactive)</option>
           <option value="active">Active (Enrolled)</option>
@@ -279,12 +289,13 @@ export function BursarStudentsView() {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {isLoading ? (
-                <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-400">
-                    Loading students...
-                  </td>
-                </tr>
-              ) : data?.students.length === 0 ? (
+                <>
+                  <TableRowSkeleton columns={6} />
+                  <TableRowSkeleton columns={6} />
+                  <TableRowSkeleton columns={6} />
+                  <TableRowSkeleton columns={6} />
+                </>
+              ) : !data?.students || data.students.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="p-4">
                     {search || selectedClass || statusFilter !== "all" ? (
@@ -319,8 +330,15 @@ export function BursarStudentsView() {
                       key={student.id}
                       className="hover:bg-slate-50/80 transition-colors"
                     >
-                      <td className="p-4 font-bold text-slate-900">
-                        {student.firstName} {student.lastName}
+                      <td className="p-4">
+                        <span className="font-bold text-slate-900 block">
+                          {student.firstName} {student.lastName}
+                        </span>
+                        {student.gender && (
+                          <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                            {student.gender === "MALE" ? "Male" : "Female"}
+                          </span>
+                        )}
                       </td>
                       <td className="p-4 font-mono text-slate-600">
                         {student.admissionNumber}
@@ -436,19 +454,34 @@ export function BursarStudentsView() {
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-700">Class</label>
-            <select
-              value={studentClass}
-              onChange={(e) => setStudentClass(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
-            >
-              {SCHOOL_CLASSES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-slate-700">Gender</label>
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value as "MALE" | "FEMALE" | "")}
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
+              >
+                <option value="">Select Gender (Optional)</option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+              </select>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-slate-700">Class</label>
+              <select
+                value={studentClass}
+                onChange={(e) => setStudentClass(e.target.value)}
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
+              >
+                {SCHOOL_CLASSES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="pt-2 flex justify-end gap-2">
@@ -507,19 +540,34 @@ export function BursarStudentsView() {
               />
             </div>
 
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-700">Class</label>
-              <select
-                value={editClass}
-                onChange={(e) => setEditClass(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
-              >
-                {SCHOOL_CLASSES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-slate-700">Gender</label>
+                <select
+                  value={editGender}
+                  onChange={(e) => setEditGender(e.target.value as "MALE" | "FEMALE" | "")}
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
+                >
+                  <option value="">Select Gender (Optional)</option>
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-slate-700">Class</label>
+                <select
+                  value={editClass}
+                  onChange={(e) => setEditClass(e.target.value)}
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
+                >
+                  {SCHOOL_CLASSES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
@@ -738,7 +786,7 @@ export function BursarStudentsView() {
                 <select
                   value={relationship}
                   onChange={(e) => setRelationship(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                 >
                   <option value="Father">Father</option>
                   <option value="Mother">Mother</option>

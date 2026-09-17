@@ -112,7 +112,7 @@ function AcceptInviteContent() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="At least 8 characters"
-                      className="w-full pl-10 pr-11 py-3 bg-white border border-slate-200 hover:border-slate-300 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2B35AF]/20 focus:border-[#2B35AF] transition-all"
+                      className="w-full pl-10 pr-11 py-3 bg-white border border-slate-200 hover:border-slate-300 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 transition-all"
                     />
                     <button
                       type="button"
@@ -139,7 +139,7 @@ function AcceptInviteContent() {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Repeat password"
-                      className="w-full pl-10 pr-11 py-3 bg-white border border-slate-200 hover:border-slate-300 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2B35AF]/20 focus:border-[#2B35AF] transition-all"
+                      className="w-full pl-10 pr-11 py-3 bg-white border border-slate-200 hover:border-slate-300 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 transition-all"
                     />
                     <button
                       type="button"

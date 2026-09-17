@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { TableRowSkeleton } from "@/components/ui/Skeleton";
 import { ShieldCheck, AlertTriangle, FileText } from "lucide-react";
 
 export function ProprietorAuditLogView() {
@@ -60,12 +61,13 @@ export function ProprietorAuditLogView() {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {isLoading ? (
-                <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-400">
-                    Loading audit entries...
-                  </td>
-                </tr>
-              ) : data?.logs?.length === 0 ? (
+                <>
+                  <TableRowSkeleton columns={6} />
+                  <TableRowSkeleton columns={6} />
+                  <TableRowSkeleton columns={6} />
+                  <TableRowSkeleton columns={6} />
+                </>
+              ) : !data?.logs || data.logs.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="p-6">
                     {isSensitiveOnly ? (

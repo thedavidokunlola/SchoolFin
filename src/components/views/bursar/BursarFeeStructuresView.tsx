@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
 import { SCHOOL_CLASSES } from "@/lib/constants";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { CardGridSkeleton } from "@/components/ui/Skeleton";
 import { Plus, Trash2, Edit2, AlertTriangle, FileText } from "lucide-react";
 
 interface FeeStructureItem {
@@ -227,25 +228,25 @@ export function BursarFeeStructuresView() {
             Define, edit, and manage itemized termly fee schedules per class
           </p>
         </div>
-        <Button
-          variant="accent"
-          size="sm"
-          onClick={() => {
-            setTermId(activeTerm?.id || "");
-            setIsCreateOpen(true);
-          }}
-          className="w-full sm:w-auto gap-2 shadow-xs"
-        >
-          <Plus className="w-4 h-4" /> Create Fee Structure
-        </Button>
+        {(structures?.length ?? 0) > 0 && (
+          <Button
+            variant="accent"
+            size="sm"
+            onClick={() => {
+              setTermId(activeTerm?.id || "");
+              setIsCreateOpen(true);
+            }}
+            className="w-full sm:w-auto gap-2 shadow-xs"
+          >
+            <Plus className="w-4 h-4" /> Create Fee Structure
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {isLoading ? (
-          <div className="col-span-1 sm:col-span-2 lg:col-span-3 p-12 text-center text-xs text-slate-400">
-            Loading fee structures...
-          </div>
-        ) : (structures as FeeStructureItem[] | undefined)?.length === 0 ? (
+          <CardGridSkeleton count={3} />
+        ) : !structures || (structures as FeeStructureItem[]).length === 0 ? (
           <EmptyState
             icon={<FileText className="w-6 h-6" />}
             title="No Fee Structures Configured"
@@ -362,7 +363,7 @@ export function BursarFeeStructuresView() {
               <select
                 value={className}
                 onChange={(e) => setClassName(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               >
                 {SCHOOL_CLASSES.map((c) => (
                   <option key={c} value={c}>
@@ -377,7 +378,7 @@ export function BursarFeeStructuresView() {
               <select
                 value={termId}
                 onChange={(e) => setTermId(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               >
                 {terms?.map((t) => (
                   <option key={t.id} value={t.id}>
@@ -416,7 +417,7 @@ export function BursarFeeStructuresView() {
                     onChange={(e) =>
                       handleLineItemChange(idx, "label", e.target.value)
                     }
-                    className="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-xs"
+                    className="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                   />
                   <input
                     type="number"
@@ -426,7 +427,7 @@ export function BursarFeeStructuresView() {
                     onChange={(e) =>
                       handleLineItemChange(idx, "amount", e.target.value)
                     }
-                    className="w-32 px-3 py-2 border border-slate-300 rounded-xl text-xs font-semibold"
+                    className="w-32 px-3 py-2 border border-slate-300 rounded-xl text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                   />
                   {lineItems.length > 1 && (
                     <button
@@ -499,7 +500,7 @@ export function BursarFeeStructuresView() {
               <select
                 value={editClassName}
                 onChange={(e) => setEditClassName(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               >
                 {SCHOOL_CLASSES.map((c) => (
                   <option key={c} value={c}>
@@ -514,7 +515,7 @@ export function BursarFeeStructuresView() {
               <select
                 value={editTermId}
                 onChange={(e) => setEditTermId(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               >
                 {terms?.map((t) => (
                   <option key={t.id} value={t.id}>
@@ -553,7 +554,7 @@ export function BursarFeeStructuresView() {
                     onChange={(e) =>
                       handleEditLineItemChange(idx, "label", e.target.value)
                     }
-                    className="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-xs"
+                    className="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                   />
                   <input
                     type="number"
@@ -563,7 +564,7 @@ export function BursarFeeStructuresView() {
                     onChange={(e) =>
                       handleEditLineItemChange(idx, "amount", e.target.value)
                     }
-                    className="w-32 px-3 py-2 border border-slate-300 rounded-xl text-xs font-semibold"
+                    className="w-32 px-3 py-2 border border-slate-300 rounded-xl text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                   />
                   {editLineItems.length > 1 && (
                     <button

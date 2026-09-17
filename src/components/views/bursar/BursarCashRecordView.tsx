@@ -144,7 +144,7 @@ export function BursarCashRecordView() {
                 required
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               >
                 <option value="">Choose student receiving payment...</option>
                 {studentsData?.students.map((s) => (

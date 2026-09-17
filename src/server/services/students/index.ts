@@ -12,6 +12,7 @@ export interface CreateStudentInput {
   admissionNumber: string;
   firstName: string;
   lastName: string;
+  gender?: string;
   class: string;
   photoUrl?: string;
 }
@@ -34,6 +35,7 @@ export async function createStudent(input: CreateStudentInput, actingUserId: str
         admissionNumber: input.admissionNumber.trim(),
         firstName: input.firstName.trim(),
         lastName: input.lastName.trim(),
+        gender: input.gender ? input.gender.trim() : undefined,
         class: input.class.trim(),
         photoUrl: input.photoUrl,
       },
@@ -48,6 +50,7 @@ export async function createStudent(input: CreateStudentInput, actingUserId: str
         metadata: {
           admissionNumber: student.admissionNumber,
           class: student.class,
+          gender: student.gender,
         },
         isSensitive: false,
       },
@@ -63,6 +66,7 @@ export interface UpdateStudentInput {
   admissionNumber?: string;
   firstName?: string;
   lastName?: string;
+  gender?: string;
   class?: string;
   isActive?: boolean;
   photoUrl?: string;
@@ -97,6 +101,7 @@ export async function updateStudent(input: UpdateStudentInput, actingUserId: str
         ...(input.admissionNumber ? { admissionNumber: input.admissionNumber.trim() } : {}),
         ...(input.firstName ? { firstName: input.firstName.trim() } : {}),
         ...(input.lastName ? { lastName: input.lastName.trim() } : {}),
+        ...(input.gender !== undefined ? { gender: input.gender ? input.gender.trim() : null } : {}),
         ...(input.class ? { class: input.class.trim() } : {}),
         ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),
         ...(input.photoUrl !== undefined ? { photoUrl: input.photoUrl } : {}),

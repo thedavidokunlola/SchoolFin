@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { CardGridSkeleton } from "@/components/ui/Skeleton";
 import { Plus, Edit2, Trash2, AlertTriangle, Calendar } from "lucide-react";
 
 interface AcademicTermItem {
@@ -146,22 +147,22 @@ export function ProprietorTermsView() {
             Configure academic sessions, active terms, payment due dates, and update/remove terms
           </p>
         </div>
-        <Button
-          variant="accent"
-          size="sm"
-          onClick={() => setIsCreateModalOpen(true)}
-          className="w-full sm:w-auto gap-2 shadow-xs"
-        >
-          <Plus className="w-4 h-4" /> Create Term
-        </Button>
+        {(terms?.length ?? 0) > 0 && (
+          <Button
+            variant="accent"
+            size="sm"
+            onClick={() => setIsCreateModalOpen(true)}
+            className="w-full sm:w-auto gap-2 shadow-xs"
+          >
+            <Plus className="w-4 h-4" /> Create Term
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {isLoading ? (
-          <div className="col-span-1 sm:col-span-2 lg:col-span-3 p-12 text-center text-xs text-slate-400">
-            Loading terms...
-          </div>
-        ) : terms?.length === 0 ? (
+          <CardGridSkeleton count={3} />
+        ) : !terms || terms.length === 0 ? (
           <EmptyState
             icon={<Calendar className="w-6 h-6" />}
             title="No Academic Terms Configured"

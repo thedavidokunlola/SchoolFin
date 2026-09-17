@@ -219,11 +219,11 @@ export function BursarFeePostView({ onNavigate }: BursarFeePostViewProps) {
                     setSelectedTermId(e.target.value);
                     setSelectedFeeStructureId("");
                   }}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                 >
                   {terms?.map((t) => (
                     <option key={t.id} value={t.id}>
-                      {t.name} {t.isActive ? "⭐ (Active Term)" : ""}
+                      {t.name} {t.isActive ? "(Active)" : ""}
                     </option>
                   ))}
                 </select>
@@ -238,11 +238,11 @@ export function BursarFeePostView({ onNavigate }: BursarFeePostViewProps) {
                       setSelectedClass(e.target.value);
                       setSelectedFeeStructureId("");
                     }}
-                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                   >
                     {SCHOOL_CLASSES.map((c) => (
                       <option key={c} value={c}>
-                        {c} {classesWithStructures.includes(c) ? "✓ (Configured)" : ""}
+                        {c} {classesWithStructures.includes(c) ? "(Configured)" : ""}
                       </option>
                     ))}
                   </select>
@@ -256,7 +256,7 @@ export function BursarFeePostView({ onNavigate }: BursarFeePostViewProps) {
                     value={selectedFeeStructureId}
                     onChange={(e) => setSelectedFeeStructureId(e.target.value)}
                     disabled={isLoadingStructures || (classStructures?.length ?? 0) === 0}
-                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 disabled:bg-slate-100 disabled:text-slate-400"
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 disabled:bg-slate-100 disabled:text-slate-400"
                   >
                     <option value="">
                       {(classStructures?.length ?? 0) === 0
@@ -355,11 +355,11 @@ export function BursarFeePostView({ onNavigate }: BursarFeePostViewProps) {
                     setSelectedTermId(e.target.value);
                     setSelectedFeeStructureId("");
                   }}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                 >
                   {terms?.map((t) => (
                     <option key={t.id} value={t.id}>
-                      {t.name} {t.isActive ? "⭐ (Active Term)" : ""}
+                      {t.name} {t.isActive ? "(Active)" : ""}
                     </option>
                   ))}
                 </select>
@@ -374,7 +374,7 @@ export function BursarFeePostView({ onNavigate }: BursarFeePostViewProps) {
                       setIndividualStudentClass(e.target.value);
                       setSelectedStudentId("");
                     }}
-                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                   >
                     <option value="">All Classes</option>
                     {SCHOOL_CLASSES.map((c) => (
@@ -390,7 +390,7 @@ export function BursarFeePostView({ onNavigate }: BursarFeePostViewProps) {
                   <select
                     value={selectedStudentId}
                     onChange={(e) => setSelectedStudentId(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                   >
                     <option value="">Choose a student...</option>
                     {studentsData?.students.map((s) => (
@@ -407,7 +407,7 @@ export function BursarFeePostView({ onNavigate }: BursarFeePostViewProps) {
                 <select
                   value={selectedFeeStructureId}
                   onChange={(e) => setSelectedFeeStructureId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                 >
                   <option value="">Select Fee Structure</option>
                   {termStructures?.map((fs) => (

@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { TableRowSkeleton, CardGridSkeleton } from "@/components/ui/Skeleton";
 import { Plus, FileText, Bell, History } from "lucide-react";
 import type { DebtStage, NotificationChannel } from "@prisma/client";
 
@@ -112,22 +113,26 @@ export function BursarDebtCollectionView() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsTemplateModalOpen(true)}
-            className="gap-2 text-xs"
-          >
-            <FileText className="w-4 h-4" /> New Template
-          </Button>
-          <Button
-            variant="accent"
-            size="md"
-            onClick={() => setIsRuleModalOpen(true)}
-            className="gap-2 text-xs shadow-xs"
-          >
-            <Plus className="w-4 h-4" /> Add Collection Rule
-          </Button>
+          {activeTab === "TEMPLATES" && (templates?.length ?? 0) > 0 && (
+            <Button
+              variant="outline"
+              size="md"
+              onClick={() => setIsTemplateModalOpen(true)}
+              className="gap-2 text-xs"
+            >
+              <FileText className="w-4 h-4" /> New Template
+            </Button>
+          )}
+          {activeTab === "RULES" && (rules?.length ?? 0) > 0 && (
+            <Button
+              variant="accent"
+              size="md"
+              onClick={() => setIsRuleModalOpen(true)}
+              className="gap-2 text-xs shadow-xs"
+            >
+              <Plus className="w-4 h-4" /> Add Collection Rule
+            </Button>
+          )}
         </div>
       </div>
 
@@ -187,12 +192,12 @@ export function BursarDebtCollectionView() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {isRulesLoading ? (
-                  <tr>
-                    <td colSpan={5} className="p-8 text-center text-slate-400">
-                      Loading rules...
-                    </td>
-                  </tr>
-                ) : rules?.length === 0 ? (
+                  <>
+                    <TableRowSkeleton columns={5} />
+                    <TableRowSkeleton columns={5} />
+                    <TableRowSkeleton columns={5} />
+                  </>
+                ) : !rules || rules.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="p-6">
                       <EmptyState
@@ -240,10 +245,8 @@ export function BursarDebtCollectionView() {
       {activeTab === "TEMPLATES" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {isTemplatesLoading ? (
-            <div className="col-span-2 p-8 text-center text-slate-400 text-xs">
-              Loading templates...
-            </div>
-          ) : templates?.length === 0 ? (
+            <CardGridSkeleton count={2} />
+          ) : !templates || templates.length === 0 ? (
             <div className="col-span-2">
               <EmptyState
                 icon={<FileText className="w-6 h-6 text-[#2B35AF]" />}
@@ -308,12 +311,12 @@ export function BursarDebtCollectionView() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {isHistoryLoading ? (
-                  <tr>
-                    <td colSpan={6} className="p-8 text-center text-slate-400">
-                      Loading event log...
-                    </td>
-                  </tr>
-                ) : eventHistory?.length === 0 ? (
+                  <>
+                    <TableRowSkeleton columns={6} />
+                    <TableRowSkeleton columns={6} />
+                    <TableRowSkeleton columns={6} />
+                  </>
+                ) : !eventHistory || eventHistory.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="p-6">
                       <EmptyState
@@ -372,7 +375,7 @@ export function BursarDebtCollectionView() {
               Collection Stage
             </label>
             <select
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               value={ruleStage}
               onChange={(e) => setRuleStage(e.target.value as DebtStage)}
             >
@@ -400,7 +403,7 @@ export function BursarDebtCollectionView() {
               Select Communication Template
             </label>
             <select
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               value={ruleTemplateId}
               onChange={(e) => setRuleTemplateId(e.target.value)}
               required
@@ -449,7 +452,7 @@ export function BursarDebtCollectionView() {
           <div>
             <label className="text-xs font-semibold text-slate-700 block mb-1">Channel</label>
             <select
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               value={templateChannel}
               onChange={(e) => setTemplateChannel(e.target.value as NotificationChannel)}
             >
@@ -491,7 +494,7 @@ export function BursarDebtCollectionView() {
               rows={5}
               required
               placeholder="Dear Parent, this is a reminder regarding {{student_name}}'s fees of ₦{{amount_due}} due on {{due_date}}..."
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600 font-mono"
+              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 font-mono"
               value={templateBody}
               onChange={(e) => setTemplateBody(e.target.value)}
             />

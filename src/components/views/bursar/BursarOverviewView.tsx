@@ -18,7 +18,6 @@ import {
   ArrowRight,
   ShieldCheck,
   GraduationCap,
-  X,
 } from "lucide-react";
 
 export interface BursarOverviewViewProps {
@@ -45,9 +44,11 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
         <div>
-          <h1 className="text-xl md:text-2xl font-extrabold tracking-tight text-slate-900">
-            Bursar Financial Operations
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl md:text-2xl font-extrabold tracking-tight text-slate-900">
+              Bursar Financial Operations
+            </h1>
+          </div>
           <div className="flex flex-wrap items-center gap-2.5 text-xs text-slate-500 mt-1">
             <span className="flex items-center gap-1.5 font-medium text-slate-700">
               <Calendar className="w-3.5 h-3.5 text-[#2B35AF]" />
@@ -71,52 +72,52 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Badge variant={activeTerm ? "success" : "warning"} className="px-3 py-1 font-semibold text-xs">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200/60">
+            <span className={`w-2 h-2 rounded-full ${activeTerm ? "bg-emerald-500 animate-pulse" : "bg-amber-500"}`} />
             {activeTerm ? "Active Academic Term" : "Term Inactive"}
-          </Badge>
+          </div>
         </div>
       </div>
 
       {/* Financial KPI Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Total Invoiced */}
-        <Card className="shadow-2xs border-slate-200/80 hover:border-slate-300 transition-colors">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                Total Fees Invoiced
-              </span>
-              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
-                <CreditCard className="w-4 h-4" />
-              </div>
+        {/* Total Invoiced - High Contrast Dark Hero Card */}
+        <div className="rounded-2xl p-5 bg-[#12151E] text-white border border-slate-800 shadow-sm flex flex-col justify-between relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-600/20 transition-all" />
+          <div className="flex items-center justify-between relative z-10">
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+              Total Invoiced
+            </span>
+            <div className="p-2.5 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-xl">
+              <CreditCard className="w-4 h-4" />
             </div>
-            <div className="mt-3">
-              <span className="text-2xl font-black text-slate-900">
-                {isLoadingMetrics
-                  ? "..."
-                  : totalPosted.toLocaleString("en-NG", {
-                      style: "currency",
-                      currency: "NGN",
-                    })}
-              </span>
-              <p className="text-[11px] text-slate-400 mt-0.5">Active term fee charges</p>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="mt-4 relative z-10">
+            <span className="text-2xl font-black tracking-tight text-white block truncate">
+              {isLoadingMetrics
+                ? "..."
+                : totalPosted.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                  })}
+            </span>
+            <p className="text-[11px] text-slate-400 mt-1">Active term fee charges</p>
+          </div>
+        </div>
 
         {/* Total Collected */}
-        <Card className="shadow-2xs border-emerald-200/80 bg-emerald-50/20 hover:border-emerald-300 transition-colors">
-          <CardContent className="p-5">
+        <Card className="shadow-2xs border-slate-200/80 hover:border-slate-300 transition-colors rounded-2xl">
+          <CardContent className="p-5 flex flex-col justify-between h-full">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                 Verified Collections
               </span>
-              <div className="p-2 bg-emerald-100 text-emerald-700 rounded-xl">
+              <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100">
                 <Receipt className="w-4 h-4" />
               </div>
             </div>
-            <div className="mt-3">
-              <span className="text-2xl font-black text-emerald-700">
+            <div className="mt-4">
+              <span className="text-2xl font-black text-emerald-700 block truncate">
                 {isLoadingMetrics
                   ? "..."
                   : totalCollected.toLocaleString("en-NG", {
@@ -124,24 +125,24 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
                       currency: "NGN",
                     })}
               </span>
-              <p className="text-[11px] text-emerald-600/80 mt-0.5">Cash receipts & payments</p>
+              <p className="text-[11px] text-slate-400 mt-1">Cash receipts & payments</p>
             </div>
           </CardContent>
         </Card>
 
         {/* Total Outstanding */}
-        <Card className="shadow-2xs border-rose-200/80 bg-rose-50/15 hover:border-rose-300 transition-colors">
-          <CardContent className="p-5">
+        <Card className="shadow-2xs border-slate-200/80 hover:border-slate-300 transition-colors rounded-2xl">
+          <CardContent className="p-5 flex flex-col justify-between h-full">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-rose-800 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                 Outstanding Balance
               </span>
-              <div className="p-2 bg-rose-100 text-rose-700 rounded-xl">
+              <div className="p-2.5 bg-rose-50 text-rose-600 rounded-xl border border-rose-100">
                 <TrendingUp className="w-4 h-4" />
               </div>
             </div>
-            <div className="mt-3">
-              <span className="text-2xl font-black text-rose-600">
+            <div className="mt-4">
+              <span className="text-2xl font-black text-rose-600 block truncate">
                 {isLoadingMetrics
                   ? "..."
                   : totalOutstanding.toLocaleString("en-NG", {
@@ -149,27 +150,27 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
                       currency: "NGN",
                     })}
               </span>
-              <p className="text-[11px] text-rose-500 mt-0.5">Uncollected student debt</p>
+              <p className="text-[11px] text-slate-400 mt-1">Uncollected student debt</p>
             </div>
           </CardContent>
         </Card>
 
         {/* Active Students Headcount */}
-        <Card className="shadow-2xs border-slate-200/80 hover:border-slate-300 transition-colors">
-          <CardContent className="p-5">
+        <Card className="shadow-2xs border-slate-200/80 hover:border-slate-300 transition-colors rounded-2xl">
+          <CardContent className="p-5 flex flex-col justify-between h-full">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                 Enrolled Students
               </span>
-              <div className="p-2 bg-sky-50 text-sky-600 rounded-xl">
+              <div className="p-2.5 bg-blue-50 text-[#2B35AF] rounded-xl border border-blue-100">
                 <Users className="w-4 h-4" />
               </div>
             </div>
-            <div className="mt-3">
-              <span className="text-2xl font-black text-slate-900">
+            <div className="mt-4">
+              <span className="text-2xl font-black text-slate-900 block">
                 {isLoadingMetrics ? "..." : metrics?.activeStudentsCount ?? 0}
               </span>
-              <p className="text-[11px] text-slate-400 mt-0.5">Active student accounts</p>
+              <p className="text-[11px] text-slate-400 mt-1">Active student accounts</p>
             </div>
           </CardContent>
         </Card>
@@ -178,9 +179,9 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
       {/* Middle Row: Overall Collection Progress & Class Performance Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Overall Collection Health Widget */}
-        <Card className="lg:col-span-1 shadow-2xs border-slate-200/80 flex flex-col justify-between">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-bold flex items-center gap-2">
+        <Card className="lg:col-span-1 shadow-2xs border-slate-200/80 rounded-2xl flex flex-col justify-between">
+          <CardHeader className="pb-3 border-b border-slate-100">
+            <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-900">
               <ShieldCheck className="w-4 h-4 text-[#2B35AF]" />
               Collection Recovery Rate
             </CardTitle>
@@ -188,10 +189,10 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
               Recovery progress towards full term billing
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="p-5 space-y-4">
             <div className="space-y-2">
               <div className="flex justify-between items-baseline">
-                <span className="text-3xl font-extrabold text-slate-900">{collectionRate}%</span>
+                <span className="text-3xl font-black text-slate-900">{collectionRate}%</span>
                 <span className="text-xs font-semibold text-slate-500">
                   {totalCollected.toLocaleString("en-NG", { style: "currency", currency: "NGN" })} /{" "}
                   {totalPosted.toLocaleString("en-NG", { style: "currency", currency: "NGN" })}
@@ -205,7 +206,7 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
               </div>
             </div>
 
-            <div className="p-3.5 bg-slate-50 border border-slate-100 rounded-xl space-y-1.5 text-xs">
+            <div className="p-3.5 bg-slate-50 border border-slate-100 rounded-xl space-y-2 text-xs">
               <div className="flex justify-between text-slate-600">
                 <span>Total Invoiced</span>
                 <strong className="text-slate-900 font-semibold">
@@ -216,7 +217,7 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
                 <span>Total Collected</span>
                 <strong>₦{totalCollected.toLocaleString()}</strong>
               </div>
-              <div className="flex justify-between text-rose-600 font-medium pt-1 border-t border-slate-200/60">
+              <div className="flex justify-between text-rose-600 font-medium pt-1.5 border-t border-slate-200/60">
                 <span>Remaining to Recover</span>
                 <strong>₦{totalOutstanding.toLocaleString()}</strong>
               </div>
@@ -225,11 +226,11 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
         </Card>
 
         {/* Class-by-Class Recovery Breakdown */}
-        <Card className="lg:col-span-2 shadow-2xs border-slate-200/80">
-          <CardHeader className="pb-3">
+        <Card className="lg:col-span-2 shadow-2xs border-slate-200/80 rounded-2xl">
+          <CardHeader className="pb-3 border-b border-slate-100">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-sm font-bold">Class Collection Performance</CardTitle>
+                <CardTitle className="text-sm font-bold text-slate-900">Class Collection Performance</CardTitle>
                 <CardDescription className="text-xs">
                   Fee recovery progress broken down by class
                 </CardDescription>
@@ -258,7 +259,7 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
                 />
               </div>
             ) : (
-              <div className="divide-y divide-slate-100 max-h-[220px] overflow-y-auto">
+              <div className="divide-y divide-slate-100 max-h-[240px] overflow-y-auto">
                 {incomeData.classBreakdowns.map((cb) => {
                   const rate = Math.round(cb.collectionRate);
                   return (
@@ -302,11 +303,11 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
       {/* Bottom Row: Recent Cash Receipts & Recent Fee Postings Feed */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Recent Cash Payments Feed */}
-        <Card className="shadow-2xs border-slate-200/80">
+        <Card className="shadow-2xs border-slate-200/80 rounded-2xl">
           <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-slate-100">
             <div>
-              <CardTitle className="text-sm font-bold flex items-center gap-2">
-                <Receipt className="w-4 h-4 text-emerald-700" />
+              <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-900">
+                <Receipt className="w-4 h-4 text-emerald-600" />
                 Recent Cash Receipts
               </CardTitle>
               <CardDescription className="text-xs">
@@ -342,16 +343,22 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
                     key={credit.id}
                     className="p-3.5 px-5 flex items-center justify-between hover:bg-slate-50/80 transition-colors text-xs"
                   >
-                    <div>
-                      <p className="font-bold text-slate-900">
-                        {credit.student.firstName} {credit.student.lastName}
-                      </p>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
-                        {credit.student.class} • Receipt:{" "}
-                        <span className="font-mono font-medium text-slate-700">
-                          {credit.receipt?.receiptNumber}
-                        </span>
-                      </p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-700 font-bold flex items-center justify-center text-xs shrink-0 border border-emerald-100">
+                        {credit.student.firstName[0]}
+                        {credit.student.lastName[0]}
+                      </div>
+                      <div>
+                        <p className="font-bold text-slate-900">
+                          {credit.student.firstName} {credit.student.lastName}
+                        </p>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          {credit.student.class} • Receipt:{" "}
+                          <span className="font-mono font-medium text-slate-700">
+                            {credit.receipt?.receiptNumber}
+                          </span>
+                        </p>
+                      </div>
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-emerald-700">
@@ -360,12 +367,10 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
                           currency: "NGN",
                         })}
                       </p>
-                      <p className="text-[10px] text-slate-400 mt-0.5">
-                        {new Date(credit.recordedAt).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                        })}
-                      </p>
+                      <div className="flex items-center justify-end gap-1 text-[10px] text-emerald-600 mt-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        <span>Completed</span>
+                      </div>
                     </div>
                   </div>
                 ))
@@ -375,11 +380,11 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
         </Card>
 
         {/* Recent Fee Postings Feed */}
-        <Card className="shadow-2xs border-slate-200/80">
+        <Card className="shadow-2xs border-slate-200/80 rounded-2xl">
           <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-slate-100">
             <div>
-              <CardTitle className="text-sm font-bold flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-indigo-600" />
+              <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-900">
+                <TrendingUp className="w-4 h-4 text-[#2B35AF]" />
                 Recent Fee Postings
               </CardTitle>
               <CardDescription className="text-xs">
@@ -415,13 +420,19 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
                     key={posting.id}
                     className="p-3.5 px-5 flex items-center justify-between hover:bg-slate-50/80 transition-colors text-xs"
                   >
-                    <div>
-                      <p className="font-bold text-slate-900">
-                        {posting.student.firstName} {posting.student.lastName}
-                      </p>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
-                        {posting.student.class} • {posting.feeStructure.name}
-                      </p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-blue-50 text-[#2B35AF] font-bold flex items-center justify-center text-xs shrink-0 border border-blue-100">
+                        {posting.student.firstName[0]}
+                        {posting.student.lastName[0]}
+                      </div>
+                      <div>
+                        <p className="font-bold text-slate-900">
+                          {posting.student.firstName} {posting.student.lastName}
+                        </p>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          {posting.student.class} • {posting.feeStructure.name}
+                        </p>
+                      </div>
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-slate-900">
@@ -447,3 +458,4 @@ export function BursarOverviewView({ onNavigate }: BursarOverviewViewProps) {
     </div>
   );
 }
+

@@ -103,7 +103,7 @@ export function ProprietorComplianceView() {
             <input
               type="text"
               placeholder="Search email or name..."
-              className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600"
+              className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               value={searchUserEmail}
               onChange={(e) => setSearchUserEmail(e.target.value)}
             />

@@ -124,7 +124,7 @@ function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@school.ng"
-              className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-[#1E257A] focus:ring-2 focus:ring-[#1E257A]/10 rounded-xl text-sm text-slate-900 outline-none transition-all"
+              className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-xl text-sm text-slate-900 outline-none transition-all"
             />
           </div>
         </div>
@@ -147,7 +147,7 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-[#1E257A] focus:ring-2 focus:ring-[#1E257A]/10 rounded-xl text-sm text-slate-900 outline-none transition-all"
+              className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-xl text-sm text-slate-900 outline-none transition-all"
             />
             <button
               type="button"

@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
 import { SCHOOL_CLASSES } from "@/lib/constants";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { TableRowSkeleton } from "@/components/ui/Skeleton";
 import {
   Download,
   Mail,
@@ -192,7 +193,7 @@ export function BursarDebtorsView() {
               <input
                 type="text"
                 placeholder="e.g. Adewale or SF/2026/001"
-                className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600"
+                className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -204,7 +205,7 @@ export function BursarDebtorsView() {
               Filter by Class
             </label>
             <select
-              className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600"
+              className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
             >
@@ -224,7 +225,7 @@ export function BursarDebtorsView() {
             <input
               type="number"
               placeholder="e.g. 50000"
-              className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600"
+              className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               value={minAmount || ""}
               onChange={(e) => setMinAmount(e.target.value ? Number(e.target.value) : undefined)}
             />
@@ -237,7 +238,7 @@ export function BursarDebtorsView() {
             <input
               type="number"
               placeholder="e.g. 14"
-              className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600"
+              className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               value={minOverdueDays || ""}
               onChange={(e) =>
                 setMinOverdueDays(e.target.value ? Number(e.target.value) : undefined)
@@ -288,12 +289,13 @@ export function BursarDebtorsView() {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {isLoading ? (
-                <tr>
-                  <td colSpan={8} className="p-8 text-center text-slate-400">
-                    Loading debtors list...
-                  </td>
-                </tr>
-              ) : debtorsData?.debtors.length === 0 ? (
+                <>
+                  <TableRowSkeleton columns={8} />
+                  <TableRowSkeleton columns={8} />
+                  <TableRowSkeleton columns={8} />
+                  <TableRowSkeleton columns={8} />
+                </>
+              ) : !debtorsData?.debtors || debtorsData.debtors.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="p-6">
                     {searchTerm || selectedClass || minAmount || minOverdueDays ? (
@@ -448,7 +450,7 @@ export function BursarDebtorsView() {
             <textarea
               rows={4}
               placeholder="Leave blank to send standard payment link notice."
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600"
+              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
               value={customMessage}
               onChange={(e) => setCustomMessage(e.target.value)}
             />
