@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { trpc } from "@/lib/trpc/client";
 import { schoolConfig } from "../../../../school.config";
@@ -262,11 +263,13 @@ export default function SchoolSetupPage() {
       {/* ================= LEFT PANE: FULL-BLEED IMAGE WITH BRANDING (100vh) ================= */}
       <div className="hidden lg:flex lg:w-[42%] xl:w-[45%] h-full relative overflow-hidden select-none bg-slate-900 flex-col justify-between p-10 xl:p-14">
         {/* Background Image */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/image.png"
+        <Image
+          src="/images/image.webp"
           alt="School Portal"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          fill
+          priority
+          sizes="(max-width: 1024px) 100vw, 45vw"
+          className="object-cover object-center"
         />
         {/* Subtle Dark Gradient Overlay for optimal text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#090D1A]/85 via-[#090D1A]/30 to-[#090D1A]/75 pointer-events-none" />
