@@ -25,7 +25,7 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
             cacheTime: 10 * 60 * 1000, // Keep inactive cache alive for 10 minutes (TanStack Query v4)
             refetchOnWindowFocus: false, // Save bandwidth and avoid repetitive requests
             refetchOnReconnect: true, // Automatically synchronize when internet reconnects
-            retry: (failureCount, error) => {
+            retry: (failureCount) => {
               // Retry up to 2 times for transient network dropouts, but not for 4xx errors
               if (failureCount < 2) return true;
               return false;

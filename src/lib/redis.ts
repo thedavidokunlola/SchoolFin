@@ -67,7 +67,7 @@ if (!config.isProduction) {
 }
 
 // Proxied Redis client that falls back gracefully to in-memory store if Redis daemon is offline
-export const redis = new Proxy(realRedis as any, {
+export const redis = new Proxy(realRedis as unknown as Redis, {
   get(target, prop, receiver) {
     if (prop === "get") {
       return async (key: string) => {
@@ -83,7 +83,7 @@ export const redis = new Proxy(realRedis as any, {
     }
 
     if (prop === "set") {
-      return async (key: string, value: string, ...args: any[]) => {
+      return async (key: string, value: string, ...args: (string | number)[]) => {
         let ttlSeconds: number | undefined;
         if (args[0] === "EX" && typeof args[1] === "number") {
           ttlSeconds = args[1];
@@ -92,6 +92,7 @@ export const redis = new Proxy(realRedis as any, {
 
         if (isRedisConnected) {
           try {
+            // @ts-expect-error - ioredis spread args
             return await target.set(key, value, ...args);
           } catch {
             return "OK";

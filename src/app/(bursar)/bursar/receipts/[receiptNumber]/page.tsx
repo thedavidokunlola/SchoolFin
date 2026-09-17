@@ -11,8 +11,7 @@ import { trpc } from "@/lib/trpc/client";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { CashReceiptTemplate } from "@/components/receipt/CashReceiptTemplate";
 import { Button } from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Printer, ArrowLeft, CheckCircle2, ShieldCheck } from "lucide-react";
+import { Printer, ArrowLeft, CheckCircle2 } from "lucide-react";
 
 export default function BursarReceiptPage() {
   const params = useParams();

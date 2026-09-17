@@ -13,12 +13,12 @@ import { sendPaymentConfirmation } from "@/server/services/notifications/send-pa
 import { encrypt } from "@/server/services/encryption";
 
 export interface FlwWebhookJobData {
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
 }
 
 export async function handleProcessFlwWebhook(job: Job<FlwWebhookJobData>) {
-  const data = job.data.payload.data || job.data.payload;
-  const txRef = data.tx_ref || data.txRef;
+  const data = ((job.data.payload.data as Record<string, unknown> | undefined) || job.data.payload) as Record<string, unknown>;
+  const txRef = (data.tx_ref || data.txRef) as string | undefined;
 
   if (!txRef) {
     return;
@@ -42,13 +42,15 @@ export async function handleProcessFlwWebhook(job: Job<FlwWebhookJobData>) {
   }
 
   // Verify transaction with Flutterwave API
-  const verification = await paymentGateway.verifyTransaction(data.id || txRef);
+  const transactionId = data.id ? String(data.id) : txRef;
+  const verification = await paymentGateway.verifyTransaction(transactionId);
 
   if (verification.status === "success") {
     const paidAmount = new Decimal(verification.amount);
 
     await prisma.$transaction(async (tx) => {
-      const studentId = existingPayment?.studentId || (data.meta?.studentId as string);
+      const meta = data.meta as Record<string, unknown> | undefined;
+      const studentId = existingPayment?.studentId || (meta?.studentId as string | undefined);
 
       if (!studentId) {
         throw new Error(`Missing studentId for transaction ${txRef}`);
@@ -85,7 +87,7 @@ export async function handleProcessFlwWebhook(job: Job<FlwWebhookJobData>) {
       const count = await tx.receipt.count();
       const receiptNumber = `RCP-${currentYear}-${String(count + 1).padStart(6, "0")}`;
 
-      const receipt = await tx.receipt.create({
+      await tx.receipt.create({
         data: {
           receiptNumber,
           studentId,

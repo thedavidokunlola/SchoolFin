@@ -2,8 +2,7 @@
 // Retry failed installment auto-charges with 3-strike bursar flagging
 // Locked per Rule PAY-7 and PRD Module F3
 
-import { Job, Worker } from "bullmq";
-import { redis } from "@/lib/redis";
+import { Job } from "bullmq";
 import { prisma } from "@/server/db/prisma";
 import { paymentGateway } from "@/server/services/payment-gateway";
 import { decrypt } from "@/server/services/encryption";
@@ -75,7 +74,7 @@ export async function processRetryFailedInstallment(job: Job<RetryInstallmentJob
         const count = await tx.receipt.count();
         const receiptNumber = `RCP-${currentYear}-${String(count + 1).padStart(6, "0")}`;
 
-        const receipt = await tx.receipt.create({
+        await tx.receipt.create({
           data: {
             receiptNumber,
             studentId: student.id,

@@ -31,7 +31,7 @@ export function ParentStatementView({
   const transactionId = searchParams.get("transaction_id") || searchParams.get("transactionId") || "";
   const statusParam = searchParams.get("status");
 
-  const { data: student, isLoading, refetch } = trpc.students.getById.useQuery({
+  const { data: student, isLoading } = trpc.students.getById.useQuery({
     id: studentId,
   });
 

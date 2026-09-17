@@ -2,8 +2,6 @@
 // Fallback poller for pending payments older than 10 minutes
 // Locked per Rule PAY-4, PRD §6.5, and bullmq-job-handler skill
 
-import { Job, Worker } from "bullmq";
-import { redis } from "@/lib/redis";
 import { prisma } from "@/server/db/prisma";
 import { paymentGateway } from "@/server/services/payment-gateway";
 import { writeAuditLog } from "@/lib/audit";
@@ -59,7 +57,7 @@ export async function handlePollPendingPayments() {
           const count = await tx.receipt.count();
           const receiptNumber = `RCP-${currentYear}-${String(count + 1).padStart(6, "0")}`;
 
-          const receipt = await tx.receipt.create({
+          await tx.receipt.create({
             data: {
               receiptNumber,
               studentId: payment.studentId,

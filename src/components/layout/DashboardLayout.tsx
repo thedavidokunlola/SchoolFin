@@ -57,7 +57,6 @@ export function DashboardLayout({ children, activeTab, onTabChange }: DashboardL
     : session?.user
     ? `${session.user.firstName} ${session.user.lastName}`
     : "User";
-  const displayEmail = meData?.email || session?.user?.email || "";
 
   const navItemsByRole: Record<string, NavItem[]> = {
     PROPRIETOR: [

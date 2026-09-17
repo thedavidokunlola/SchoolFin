@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "@/server/db/prisma";
 import { writeAuditLog } from "@/lib/audit";
-import { AUDIT_ACTIONS, type UserRole } from "@/lib/constants";
+import { AUDIT_ACTIONS } from "@/lib/constants";
 import { encrypt, decrypt } from "@/server/services/encryption";
 import { createParentInvite } from "@/server/services/auth";
 

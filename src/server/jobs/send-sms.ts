@@ -77,7 +77,7 @@ export const smsWorker = new Worker(
   },
 );
 
-smsWorker.on("failed", async (job, error) => {
+smsWorker.on("failed", async (job) => {
   const isFinalFailure = job && job.attemptsMade >= (job.opts.attempts ?? 3);
 
   if (isFinalFailure && job?.data) {

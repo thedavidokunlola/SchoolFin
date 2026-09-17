@@ -61,7 +61,7 @@ export const emailWorker = new Worker(
   },
 );
 
-emailWorker.on("failed", async (job, error) => {
+emailWorker.on("failed", async (job) => {
   const isFinalFailure = job && job.attemptsMade >= (job.opts.attempts ?? 3);
 
   if (isFinalFailure && job?.data) {

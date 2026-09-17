@@ -22,7 +22,6 @@ import {
   Sparkles,
   CheckCircle2,
   GraduationCap,
-  Building,
 } from "lucide-react";
 
 function LoginForm() {
@@ -191,6 +190,7 @@ export default function LoginPage() {
       {/* ================= LEFT PANE: FULL-BLEED IMAGE WITH BRANDING (100vh) ================= */}
       <div className="hidden lg:flex lg:w-[45%] h-full relative overflow-hidden select-none bg-slate-900 flex-col justify-between p-10 xl:p-14">
         {/* Background Image */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/images/image.png"
           alt="School Portal"

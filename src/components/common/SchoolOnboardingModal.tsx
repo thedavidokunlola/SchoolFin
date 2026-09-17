@@ -95,6 +95,9 @@ export function SchoolOnboardingModal({
     if (typeof window !== "undefined") {
       localStorage.setItem("schoolfin_onboarding_shown", "true");
     }
+    if (onNavigate) {
+      onNavigate("overview");
+    }
     onClose();
   };
 

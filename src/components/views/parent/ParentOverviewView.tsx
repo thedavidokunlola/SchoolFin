@@ -11,7 +11,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { CardGridSkeleton } from "@/components/ui/Skeleton";
-import { GraduationCap, ArrowRight, ShieldCheck } from "lucide-react";
+import { GraduationCap, ArrowRight } from "lucide-react";
 
 export interface ParentOverviewViewProps {
   onSelectStudent?: (studentId: string) => void;

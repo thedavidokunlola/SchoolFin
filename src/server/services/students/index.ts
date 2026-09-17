@@ -6,7 +6,7 @@ import { prisma } from "@/server/db/prisma";
 import { writeAuditLog } from "@/lib/audit";
 import { AUDIT_ACTIONS } from "@/lib/constants";
 import { computeOutstandingBalance } from "@/server/services/balance";
-import { decrypt, encrypt } from "@/server/services/encryption";
+import { decrypt } from "@/server/services/encryption";
 
 export interface CreateStudentInput {
   admissionNumber: string;

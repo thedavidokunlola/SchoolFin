@@ -8,22 +8,15 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
+import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
-import { Input } from "@/components/ui/Input";
 import {
-  GraduationCap,
-  Receipt,
-  CreditCard,
-  User,
   Phone,
   Mail,
   Plus,
   ArrowLeft,
-  FileText,
-  Clock,
 } from "lucide-react";
 
 export default function BursarStudentProfilePage() {

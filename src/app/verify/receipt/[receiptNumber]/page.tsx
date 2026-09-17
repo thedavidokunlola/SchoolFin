@@ -6,7 +6,7 @@
 import React from "react";
 import { useParams } from "next/navigation";
 import { trpc } from "@/lib/trpc/client";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
+import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { ShieldCheck, AlertCircle, Building, Calendar, CreditCard, User } from "lucide-react";
 

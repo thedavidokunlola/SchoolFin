@@ -13,20 +13,16 @@ import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import {
   User,
-  Lock,
-  Building,
   CheckCircle2,
   AlertCircle,
   ShieldCheck,
-  Phone,
-  Mail,
   KeyRound,
 } from "lucide-react";
 
 export function ProfileSettingsView() {
   const { data: session, update: updateSession } = useSession();
   const utils = trpc.useUtils();
-  const { data: meData, isLoading: isMeLoading } = trpc.auth.me.useQuery();
+  const { data: meData } = trpc.auth.me.useQuery();
 
   // Personal Info Form State
   const [firstName, setFirstName] = useState("");

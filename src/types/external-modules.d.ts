@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/types/external-modules.d.ts
 // Ambient module declarations for external libraries
 

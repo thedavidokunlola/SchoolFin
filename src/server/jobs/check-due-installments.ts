@@ -2,14 +2,11 @@
 // Cron job checking due installments (07:00 WAT daily)
 // Locked per PRD §6.5, Rule PAY-6, PAY-7
 
-import { Job, Worker } from "bullmq";
-import { redis } from "@/lib/redis";
 import { prisma } from "@/server/db/prisma";
 import { paymentGateway } from "@/server/services/payment-gateway";
 import { decrypt } from "@/server/services/encryption";
 import { writeAuditLog } from "@/lib/audit";
 import { AUDIT_ACTIONS } from "@/lib/constants";
-import { Decimal } from "@prisma/client/runtime/library";
 import { installmentsQueue } from "./queues";
 import { sendPaymentConfirmation } from "@/server/services/notifications/send-payment-confirmation";
 
@@ -74,7 +71,7 @@ export async function handleCheckDueInstallments() {
           const count = await tx.receipt.count();
           const receiptNumber = `RCP-${currentYear}-${String(count + 1).padStart(6, "0")}`;
 
-          const receipt = await tx.receipt.create({
+          await tx.receipt.create({
             data: {
               receiptNumber,
               studentId: student.id,

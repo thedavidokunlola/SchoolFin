@@ -126,7 +126,18 @@ export async function getDebtorsList(params: DebtorFilterParams = {}) {
     termName: term.name,
     totalDebtors: filteredDebtors.length,
     totalOutstanding: totalOutstanding.toString(),
-    debtors: paginated.map(({ balanceDecimal, ...rest }) => rest),
+    debtors: paginated.map((d) => ({
+      id: d.id,
+      firstName: d.firstName,
+      lastName: d.lastName,
+      admissionNumber: d.admissionNumber,
+      class: d.class,
+      isPaused: d.isPaused,
+      creditBalance: d.creditBalance,
+      outstandingBalance: d.outstandingBalance,
+      overdueDays: d.overdueDays,
+      parent: d.parent,
+    })),
   };
 }
 

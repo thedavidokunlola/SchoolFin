@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/types/exceljs.d.ts
 // Ambient declaration for exceljs
 

@@ -8,7 +8,6 @@ import { writeAuditLog } from "@/lib/audit";
 import { AUDIT_ACTIONS } from "@/lib/constants";
 import { Decimal } from "@prisma/client/runtime/library";
 import { computeOutstandingBalance } from "@/server/services/balance";
-import { encrypt } from "@/server/services/encryption";
 
 export interface CreatePlanTemplateInput {
   name: string;

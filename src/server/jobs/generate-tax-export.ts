@@ -18,7 +18,7 @@ export async function processGenerateTaxExport(job: Job<GenerateTaxExportJobData
   const { termId, requestingUserId, requestingUserEmail } = job.data;
 
   try {
-    const { buffer, fileName } = await buildTaxAuditWorkbook(termId);
+    const { fileName } = await buildTaxAuditWorkbook(termId);
 
     // Queue email to requesting user with the report
     await notificationsQueue.add("send-email", {
