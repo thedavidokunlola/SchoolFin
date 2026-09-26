@@ -29,7 +29,7 @@ export const config = {
       (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"),
   },
   encryption: {
-    key: getEnv("ENCRYPTION_KEY", "0123456789abcdef0123456789abcdef"),
+    key: getEnv("ENCRYPTION_KEY", "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"),
   },
   flutterwave: {
     publicKey: getEnv("FLUTTERWAVE_PUBLIC_KEY", "FLWPUBK_TEST-demo"),
