@@ -11,6 +11,7 @@ import Link from "next/link";
 import { schoolConfig } from "../../../../school.config";
 import { ROLE_DASHBOARDS, type UserRole } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
+import { trpc } from "@/lib/trpc/client";
 import {
   Lock,
   Mail,
@@ -22,9 +23,6 @@ import {
   Sparkles,
   CheckCircle2,
   GraduationCap,
-  KeyRound,
-  Check,
-  Copy,
 } from "lucide-react";
 
 function LoginForm() {
@@ -32,24 +30,13 @@ function LoginForm() {
   const reason = searchParams.get("reason");
   const setupParam = searchParams.get("setup");
 
-  const [email, setEmail] = useState("bursar@schoolfin.ng");
-  const [password, setPassword] = useState("Bursar@School2026!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  const handleCopy = (text: string, field: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
-  };
-
-  const handleFillBursar = () => {
-    setEmail("bursar@schoolfin.ng");
-    setPassword("Bursar@School2026!");
-    setError(null);
-  };
+  const { data: setupStatus } = trpc.auth.getSetupStatus.useQuery();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +56,7 @@ function LoginForm() {
       } else {
         const session = await getSession();
         const role = session?.user?.role as UserRole | undefined;
-        const targetUrl = role ? ROLE_DASHBOARDS[role] : "/bursar/dashboard";
+        const targetUrl = role ? ROLE_DASHBOARDS[role] : "/proprietor/dashboard";
         window.location.href = targetUrl;
       }
     } catch {
@@ -80,6 +67,22 @@ function LoginForm() {
 
   return (
     <div className="w-full max-w-md mx-auto space-y-5">
+      {/* First-time deployment notice if uninitialized */}
+      {setupStatus && !setupStatus.isSetupComplete && (
+        <div className="p-3.5 bg-indigo-50 border border-indigo-200 rounded-2xl flex items-center justify-between gap-3 text-xs text-[#1E257A]">
+          <div className="flex items-center gap-2 font-bold">
+            <Sparkles className="w-4 h-4 shrink-0 text-[#2B35AF]" />
+            <span>First time here? Set up your school portal in 2 minutes.</span>
+          </div>
+          <Link
+            href="/setup"
+            className="px-3.5 py-1.5 bg-[#1E257A] hover:bg-[#161B58] text-white rounded-xl font-bold shrink-0 transition-colors text-xs shadow-xs"
+          >
+            Start Setup →
+          </Link>
+        </div>
+      )}
+
       <div className="space-y-1">
         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
           Sign In
@@ -89,68 +92,11 @@ function LoginForm() {
         </p>
       </div>
 
-      {/* Bursary Login Details Card */}
-      <div className="p-3.5 bg-gradient-to-br from-slate-50 to-indigo-50/40 border border-indigo-100 rounded-2xl space-y-2.5 shadow-2xs">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-black text-[#1E257A] uppercase tracking-wider">
-            <KeyRound className="w-3.5 h-3.5 text-[#2B35AF]" />
-            <span>Bursary Credentials</span>
-          </div>
-          <button
-            type="button"
-            onClick={handleFillBursar}
-            className="text-[11px] font-bold text-[#1E257A] hover:text-[#161B58] bg-white border border-indigo-200 hover:border-indigo-300 px-2 py-0.5 rounded-lg transition-all flex items-center gap-1 shadow-2xs cursor-pointer"
-          >
-            <Sparkles className="w-3 h-3 text-[#2B35AF]" /> Auto-Fill
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-          <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-xl border border-slate-200/80">
-            <div className="truncate mr-1">
-              <span className="text-[9px] uppercase font-bold text-slate-400 block">Email</span>
-              <span className="font-bold text-slate-800 text-[11px] truncate block">bursar@schoolfin.ng</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleCopy("bursar@schoolfin.ng", "email")}
-              className="p-1 text-slate-400 hover:text-slate-600 rounded-md shrink-0"
-              title="Copy email"
-            >
-              {copiedField === "email" ? (
-                <Check className="w-3 h-3 text-emerald-600" />
-              ) : (
-                <Copy className="w-3 h-3" />
-              )}
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-xl border border-slate-200/80">
-            <div className="truncate mr-1">
-              <span className="text-[9px] uppercase font-bold text-slate-400 block">Password</span>
-              <span className="font-mono font-bold text-slate-800 text-[11px] truncate block">Bursar@School2026!</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleCopy("Bursar@School2026!", "password")}
-              className="p-1 text-slate-400 hover:text-slate-600 rounded-md shrink-0"
-              title="Copy password"
-            >
-              {copiedField === "password" ? (
-                <Check className="w-3 h-3 text-emerald-600" />
-              ) : (
-                <Copy className="w-3 h-3" />
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-
       <form onSubmit={handleSubmit} className="space-y-4">
         {setupParam === "complete" && (
           <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-xs text-emerald-900 font-medium">
             <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
-            <span>School portal setup complete! Sign in with your account to get started.</span>
+            <span>School portal setup complete! Sign in with your new admin account to get started.</span>
           </div>
         )}
 
@@ -177,7 +123,7 @@ function LoginForm() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="bursar@schoolfin.ng"
+              placeholder="admin@school.ng"
               className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-xl text-sm text-slate-900 outline-none transition-all"
             />
           </div>
@@ -201,7 +147,7 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-xl text-sm text-slate-900 outline-none transition-all font-mono"
+              className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-xl text-sm text-slate-900 outline-none transition-all"
             />
             <button
               type="button"

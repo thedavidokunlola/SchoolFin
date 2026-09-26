@@ -239,10 +239,8 @@ export function BursarStudentsView() {
       {/* Filter and Search */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <label htmlFor="student-search-input" className="sr-only">Search students</label>
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
-            id="student-search-input"
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -251,36 +249,28 @@ export function BursarStudentsView() {
           />
         </div>
 
-        <div>
-          <label htmlFor="student-class-filter" className="sr-only">Filter by class</label>
-          <select
-            id="student-class-filter"
-            value={selectedClass}
-            onChange={(e) => setSelectedClass(e.target.value)}
-            className="w-full sm:w-auto px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
-          >
-            <option value="">All Classes</option>
-            {SCHOOL_CLASSES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </div>
+        <select
+          value={selectedClass}
+          onChange={(e) => setSelectedClass(e.target.value)}
+          className="px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
+        >
+          <option value="">All Classes</option>
+          {SCHOOL_CLASSES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
 
-        <div>
-          <label htmlFor="student-status-filter" className="sr-only">Filter by status</label>
-          <select
-            id="student-status-filter"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "inactive")}
-            className="w-full sm:w-auto px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
-          >
-            <option value="all">All Statuses (Active & Inactive)</option>
-            <option value="active">Active (Enrolled)</option>
-            <option value="inactive">Inactive / Left School</option>
-          </select>
-        </div>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "inactive")}
+          className="px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
+        >
+          <option value="all">All Statuses (Active & Inactive)</option>
+          <option value="active">Active (Enrolled)</option>
+          <option value="inactive">Inactive / Left School</option>
+        </select>
       </div>
 
       {/* Students Table */}
@@ -442,7 +432,6 @@ export function BursarStudentsView() {
           )}
 
           <Input
-            id="create-admission-number"
             label="Admission Number (Unique)"
             required
             value={admissionNumber}
@@ -452,14 +441,12 @@ export function BursarStudentsView() {
 
           <div className="grid grid-cols-2 gap-3">
             <Input
-              id="create-first-name"
               label="First Name"
               required
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
             <Input
-              id="create-last-name"
               label="Last Name"
               required
               value={lastName}
@@ -469,9 +456,8 @@ export function BursarStudentsView() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label htmlFor="create-student-gender" className="text-xs font-semibold text-slate-700">Gender</label>
+              <label className="text-xs font-semibold text-slate-700">Gender</label>
               <select
-                id="create-student-gender"
                 value={gender}
                 onChange={(e) => setGender(e.target.value as "MALE" | "FEMALE" | "")}
                 className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
@@ -483,9 +469,8 @@ export function BursarStudentsView() {
             </div>
 
             <div className="space-y-1">
-              <label htmlFor="create-student-class" className="text-xs font-semibold text-slate-700">Class</label>
+              <label className="text-xs font-semibold text-slate-700">Class</label>
               <select
-                id="create-student-class"
                 value={studentClass}
                 onChange={(e) => setStudentClass(e.target.value)}
                 className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
@@ -534,7 +519,6 @@ export function BursarStudentsView() {
             )}
 
             <Input
-              id="edit-admission-number"
               label="Admission Number"
               required
               value={editAdmissionNumber}
@@ -543,14 +527,12 @@ export function BursarStudentsView() {
 
             <div className="grid grid-cols-2 gap-3">
               <Input
-                id="edit-first-name"
                 label="First Name"
                 required
                 value={editFirstName}
                 onChange={(e) => setEditFirstName(e.target.value)}
               />
               <Input
-                id="edit-last-name"
                 label="Last Name"
                 required
                 value={editLastName}
@@ -560,9 +542,8 @@ export function BursarStudentsView() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label htmlFor="edit-student-gender" className="text-xs font-semibold text-slate-700">Gender</label>
+                <label className="text-xs font-semibold text-slate-700">Gender</label>
                 <select
-                  id="edit-student-gender"
                   value={editGender}
                   onChange={(e) => setEditGender(e.target.value as "MALE" | "FEMALE" | "")}
                   className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
@@ -574,9 +555,8 @@ export function BursarStudentsView() {
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="edit-student-class" className="text-xs font-semibold text-slate-700">Class</label>
+                <label className="text-xs font-semibold text-slate-700">Class</label>
                 <select
-                  id="edit-student-class"
                   value={editClass}
                   onChange={(e) => setEditClass(e.target.value)}
                   className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
@@ -591,13 +571,12 @@ export function BursarStudentsView() {
             </div>
 
             <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-              <span className="text-xs font-semibold text-slate-800 block">
+              <label className="text-xs font-semibold text-slate-800 block">
                 Enrollment Status
-              </span>
+              </label>
               <div className="flex items-center gap-4 text-xs">
-                <label htmlFor="edit-status-active" className="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+                <label className="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
                   <input
-                    id="edit-status-active"
                     type="radio"
                     name="studentStatus"
                     checked={editIsActive}
@@ -606,9 +585,8 @@ export function BursarStudentsView() {
                   />
                   Active (Currently Enrolled)
                 </label>
-                <label htmlFor="edit-status-inactive" className="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+                <label className="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
                   <input
-                    id="edit-status-inactive"
                     type="radio"
                     name="studentStatus"
                     checked={!editIsActive}
