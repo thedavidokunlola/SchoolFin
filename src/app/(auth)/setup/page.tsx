@@ -54,6 +54,7 @@ export default function SchoolSetupPage() {
 
   // Step 2: 6-Digit OTP Verification
   const [otpDigits, setOtpDigits] = useState(["", "", "", "", "", ""]);
+  const [setupToken, setSetupToken] = useState<string | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
   const otpInputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -72,7 +73,10 @@ export default function SchoolSetupPage() {
 
   // Send OTP Mutation
   const sendOtpMutation = trpc.auth.sendSetupOtp.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (data.setupToken) {
+        setSetupToken(data.setupToken);
+      }
       setStep(2);
       setResendCooldown(60);
       setFormError(null);
@@ -215,6 +219,7 @@ export default function SchoolSetupPage() {
       adminPhone: phone.trim() || undefined,
       adminPassword: password,
       otpCode: otpDigits.join(""),
+      setupToken: setupToken || undefined,
       termName: termName.trim(),
       termStartDate: new Date(startDate),
       termEndDate: new Date(endDate),

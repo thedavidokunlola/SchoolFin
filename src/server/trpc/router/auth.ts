@@ -46,6 +46,7 @@ export const authRouter = router({
         adminPassword: z.string().min(8, "Password must be at least 8 characters"),
         adminPhone: z.string().optional(),
         otpCode: z.string().min(6, "6-digit verification code is required"),
+        setupToken: z.string().optional(),
         termName: z.string().optional(),
         termStartDate: z.date().optional(),
         termEndDate: z.date().optional(),

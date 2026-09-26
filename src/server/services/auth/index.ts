@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "@/server/db/prisma";
 import { redis } from "@/lib/redis";
+import { config } from "@/lib/config";
 import { writeAuditLog } from "@/lib/audit";
 import { AUDIT_ACTIONS } from "@/lib/constants";
 
@@ -192,6 +193,7 @@ export interface InitializeSchoolInput {
   adminPassword: string;
   adminPhone?: string;
   otpCode?: string;
+  setupToken?: string;
   termName?: string;
   termStartDate?: Date;
   termEndDate?: Date;
@@ -215,7 +217,7 @@ export async function getSchoolSetupStatus(): Promise<{
 export async function sendSetupOtp(
   emailInput: string,
   adminName: string,
-): Promise<{ success: boolean; message: string }> {
+): Promise<{ success: boolean; message: string; setupToken?: string }> {
   const email = emailInput.toLowerCase().trim();
 
   // Check if school is already initialized
@@ -237,6 +239,14 @@ export async function sendSetupOtp(
   // Store in redis with 10-minute expiration (600 seconds)
   await redis.set(redisKey, otpCode, "EX", 600);
 
+  // Generate cryptographic token for stateless serverless environments (Vercel)
+  const expiresAt = Date.now() + 10 * 60 * 1000;
+  const hmac = crypto
+    .createHmac("sha256", config.auth.secret)
+    .update(`${email}:${otpCode}:${expiresAt}`)
+    .digest("hex");
+  const setupToken = `${expiresAt}:${hmac}`;
+
   // Dispatch email via Nodemailer
   const { sendSetupOtpEmail } = await import("@/server/services/mailer");
   await sendSetupOtpEmail({
@@ -248,6 +258,7 @@ export async function sendSetupOtp(
   return {
     success: true,
     message: "A 6-digit verification code has been sent to your email address.",
+    setupToken,
   };
 }
 
@@ -267,20 +278,36 @@ export async function initializeSchool(
 
   const email = input.adminEmail.toLowerCase().trim();
 
-  // If OTP code provided, verify it against Redis
+  // If OTP code provided, verify it against Redis or signed HMAC token
   if (input.otpCode) {
     const redisKey = `setup_otp:${email}`;
     const storedOtp = await redis.get(redisKey);
 
-    if (!storedOtp || storedOtp !== input.otpCode.trim()) {
+    let isOtpValid = false;
+
+    if (storedOtp && storedOtp === input.otpCode.trim()) {
+      isOtpValid = true;
+      await redis.del(redisKey);
+    } else if (input.setupToken) {
+      const [expStr, hash] = input.setupToken.split(":");
+      const exp = parseInt(expStr, 10);
+      if (exp && !isNaN(exp) && Date.now() <= exp) {
+        const expectedHmac = crypto
+          .createHmac("sha256", config.auth.secret)
+          .update(`${email}:${input.otpCode.trim()}:${exp}`)
+          .digest("hex");
+        if (hash === expectedHmac) {
+          isOtpValid = true;
+        }
+      }
+    }
+
+    if (!isOtpValid) {
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "Invalid or expired 6-digit verification code. Please check your email or request a new code.",
       });
     }
-
-    // Single use: delete OTP after successful verification
-    await redis.del(redisKey);
   }
 
   const existingEmail = await prisma.user.findUnique({ where: { email } });
