@@ -153,10 +153,11 @@ export async function createParentAccount(
   };
 }
 
-export async function listStaffAccounts() {
+export async function listStaffAccounts(params?: { includeDeactivated?: boolean }) {
   const staff = await prisma.user.findMany({
     where: {
       role: { in: ["BURSAR", "ACCOUNTANT", "PROPRIETOR"] },
+      ...(params?.includeDeactivated ? {} : { isActive: true }),
     },
     orderBy: [{ role: "asc" }, { lastName: "asc" }],
     select: {

@@ -14,8 +14,9 @@ import { prisma } from "@/server/db/prisma";
 export const usersRouter = router({
   listStaff: protectedProcedure
     .use(requireRole("PROPRIETOR"))
-    .query(async () => {
-      return await listStaffAccounts();
+    .input(z.object({ includeDeactivated: z.boolean().optional() }).optional())
+    .query(async ({ input }) => {
+      return await listStaffAccounts({ includeDeactivated: input?.includeDeactivated });
     }),
 
   listAll: protectedProcedure
