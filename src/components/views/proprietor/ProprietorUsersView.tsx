@@ -145,22 +145,22 @@ export function ProprietorUsersView() {
                       </Badge>
                     </td>
                     <td className="p-4 text-right">
-                      {user.isActive && user.role !== "PROPRIETOR" && (
+                      {user.role !== "PROPRIETOR" && (
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => {
                             if (
                               confirm(
-                                `Are you sure you want to deactivate ${user.firstName} ${user.lastName}?`,
+                                `Are you sure you want to remove ${user.firstName} ${user.lastName}? Their portal access will be revoked and they will be removed from this list.`,
                               )
                             ) {
                               deactivateMutation.mutate({ id: user.id });
                             }
                           }}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50 text-xs"
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50 text-xs font-semibold"
                         >
-                          Deactivate
+                          Remove Staff
                         </Button>
                       )}
                     </td>
