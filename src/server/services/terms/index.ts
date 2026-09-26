@@ -58,14 +58,30 @@ export async function createAcademicTerm(
 }
 
 export async function listAcademicTerms() {
-  return await prisma.academicTerm.findMany({
-    orderBy: { startDate: "desc" },
+  const terms = await prisma.academicTerm.findMany({
+    orderBy: { createdAt: "desc" },
     include: {
       _count: {
         select: { feeStructures: true, feePostings: true },
       },
     },
   });
+
+  // If more than one term is marked active, automatically normalize so only the most recent one is active
+  const activeTerms = terms.filter((t) => t.isActive);
+  if (activeTerms.length > 1) {
+    const [latest, ...olderActive] = activeTerms;
+    const olderIds = olderActive.map((t) => t.id);
+    await prisma.academicTerm.updateMany({
+      where: { id: { in: olderIds } },
+      data: { isActive: false },
+    });
+    olderActive.forEach((t) => {
+      t.isActive = false;
+    });
+  }
+
+  return terms;
 }
 
 export async function setActiveTerm(termId: string, actingUserId: string) {

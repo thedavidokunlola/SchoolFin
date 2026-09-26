@@ -354,7 +354,12 @@ export async function initializeSchool(
       },
     });
 
-    // 2. Create initial active Academic Term
+    // 2. Deactivate any existing terms and create initial active Academic Term
+    await tx.academicTerm.updateMany({
+      where: { isActive: true },
+      data: { isActive: false },
+    });
+
     await tx.academicTerm.create({
       data: {
         name: defaultTermName,

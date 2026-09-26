@@ -248,7 +248,7 @@ export function ProprietorTermsView() {
                     <Edit2 className="w-3.5 h-3.5" /> Edit Term
                   </Button>
 
-                  {!term.isActive && (
+                  {(!term.isActive || (terms && terms.length > 1)) && (
                     <Button
                       variant="ghost"
                       size="sm"
